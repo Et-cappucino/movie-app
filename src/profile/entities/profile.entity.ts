@@ -12,12 +12,12 @@ export class Profile {
     @Column()
     lastName: String;
 
-    @Column()
+    @Column({ unique: true })
     email: String;
 
     @Column()
     password: String;
     
-    @Column()
+    @Column({ default: false })
     isAdmin: boolean;
 }
