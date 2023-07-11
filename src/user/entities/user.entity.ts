@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Profile } from "src/profile/entities/profile.entity";
 
 @Entity()
 export class User {
@@ -14,4 +15,7 @@ export class User {
     
     @Column({ default: false })
     isAdmin: boolean;
+
+    @OneToOne(() => Profile, (profile) => profile.user)
+    profile: Profile;
 }
