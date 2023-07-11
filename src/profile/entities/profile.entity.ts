@@ -11,13 +11,4 @@ export class Profile {
 
     @Column()
     lastName: String;
-
-    @Column({ unique: true })
-    email: String;
-
-    @Column()
-    password: String;
-    
-    @Column({ default: false })
-    isAdmin: boolean;
 }

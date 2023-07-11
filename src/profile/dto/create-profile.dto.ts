@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateProfileDto {
 
@@ -9,15 +9,4 @@ export class CreateProfileDto {
     @IsNotEmpty()
     @IsString()
     lastName: String;
-    
-    @IsEmail()
-    @IsNotEmpty()
-    @IsString()
-    email: String;
-
-    @IsNotEmpty()
-    @IsString()
-    password: String;
-    
-    isAdmin: boolean;
 }
