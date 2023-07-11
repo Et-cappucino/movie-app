@@ -7,10 +7,10 @@ export class Profile {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ default: '' })
     firstName: String;
 
-    @Column()
+    @Column({ default: '' })
     lastName: String;
 
     @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
