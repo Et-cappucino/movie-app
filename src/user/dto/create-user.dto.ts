@@ -5,11 +5,11 @@ export class CreateUserDto {
     @IsEmail()
     @IsNotEmpty()
     @IsString()
-    email: String;
+    email: string;
 
     @IsNotEmpty()
     @IsString()
-    password: String;
+    password: string;
     
     isAdmin: boolean;
 }

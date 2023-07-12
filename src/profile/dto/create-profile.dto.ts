@@ -4,9 +4,9 @@ export class CreateProfileDto {
 
     @IsNotEmpty()
     @IsString()
-    firstName: String;
+    firstName: string;
 
     @IsNotEmpty()
     @IsString()
-    lastName: String;
+    lastName: string;
 }

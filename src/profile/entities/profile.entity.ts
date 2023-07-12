@@ -8,10 +8,10 @@ export class Profile {
     id: number
 
     @Column({ default: '' })
-    firstName: String;
+    firstName: string;
 
     @Column({ default: '' })
-    lastName: String;
+    lastName: string;
 
     @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
     @JoinColumn()
