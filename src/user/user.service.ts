@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,11 +16,13 @@ export class UserService {
   ) {}
   
   async signUp(createUserDto: CreateUserDto) {
+    await this.validateEmailUnique(createUserDto.email);
+
     const profile = await this.profileService.create(new Profile())
     
     const user = this.userRepository.create(createUserDto)
     user.profile = profile
-
+    
     return this.userRepository.save(user);
   }
 
@@ -46,6 +48,8 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    await this.validateEmailUnique(updateUserDto.email);
+    
     const user = await this.findOne(id)
     return this.userRepository.save({ ...user, ...updateUserDto });
   }
@@ -53,5 +57,14 @@ export class UserService {
   async remove(id: number) {
     const user = await this.findOne(id)
     return this.userRepository.remove(user);
+  }
+
+  private async validateEmailUnique(email: string) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email }
+    })
+    if (existingUser) {
+      throw new ConflictException(`User with email: ${email} already exists`);
+    }
   }
 }
