@@ -1,25 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Watchable } from './entities/watchable.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class WatchableService {
+  constructor(
+    @InjectRepository(Watchable)
+    private readonly watchableRepository: Repository<Watchable>
+  ) {}
+
   create(createWatchableDto: CreateWatchableDto) {
-    return 'This action adds a new watchable';
+    const watchable = this.watchableRepository.create(createWatchableDto)
+    return this.watchableRepository.save(watchable);
   }
 
   findAll() {
-    return `This action returns all watchable`;
+    return this.watchableRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} watchable`;
+  async findOne(id: number) {
+    const watchable = await this.watchableRepository.findOneBy({ id });
+    
+    if (!watchable) throw new NotFoundException(`Watchable with id: ${id} not found`)
+
+    return watchable;
   }
 
-  update(id: number, updateWatchableDto: UpdateWatchableDto) {
-    return `This action updates a #${id} watchable`;
+  async update(id: number, updateWatchableDto: UpdateWatchableDto) {
+    const watchable = await this.findOne(id)
+    return this.watchableRepository.save({ ...watchable, ...updateWatchableDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} watchable`;
+  async remove(id: number) {
+    const watchable = await this.findOne(id)
+    return this.watchableRepository.remove(watchable);
   }
 }
