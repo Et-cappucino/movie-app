@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { WatchableService } from './watchable.service';
+import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 
 @Controller('api/watchables')

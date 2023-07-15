@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { WatchableService } from './watchable.service';
+import { WatchableService, GenreService } from './services';
+import { Watchable, Genre } from './entities';
 import { WatchableController } from './watchable.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Watchable } from './entities/watchable.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Watchable])],
+  imports: [TypeOrmModule.forFeature([Watchable, Genre])],
   controllers: [WatchableController],
-  providers: [WatchableService]
+  providers: [
+    WatchableService, 
+    GenreService
+  ]
 })
 export class WatchableModule {}

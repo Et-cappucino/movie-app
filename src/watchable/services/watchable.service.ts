@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Watchable } from './entities/watchable.entity';
 import { Repository } from 'typeorm';
+import { CreateWatchableDto, UpdateWatchableDto } from '../dto';
+import { Watchable } from '../entities';
 
 @Injectable()
 export class WatchableService {
