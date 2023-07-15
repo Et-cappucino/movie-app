@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
 import { WatchableType } from "../enums";
+import { Genre } from "./genre.entity";
 
 @Entity()
 export class Watchable {
@@ -36,5 +37,12 @@ export class Watchable {
 
     @Column({ name: 'main_backdrop_path', nullable: true })
     mainBackdropPath: string;
-}
 
+    @ManyToMany(() => Genre)
+    @JoinTable({
+        name: 'genres',
+        joinColumn: { name: 'watchable_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'genre', referencedColumnName: 'genre' }
+    })
+    genres: Genre[];
+}

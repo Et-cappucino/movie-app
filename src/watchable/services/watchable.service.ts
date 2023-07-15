@@ -17,11 +17,20 @@ export class WatchableService {
   }
 
   findAll() {
-    return this.watchableRepository.find();
+    return this.watchableRepository.find({
+      relations: {
+        genres: true
+      }
+    });
   }
 
   async findOne(id: number) {
-    const watchable = await this.watchableRepository.findOneBy({ id });
+    const watchable = await this.watchableRepository.findOne({
+      where: { id },
+      relations: {
+        genres: true
+      }
+    });
     
     if (!watchable) throw new NotFoundException(`Watchable with id: ${id} not found`)
 
