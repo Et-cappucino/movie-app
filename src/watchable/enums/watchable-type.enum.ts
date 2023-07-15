@@ -1,5 +1,5 @@
 export enum WatchableType {
 
-    MOVIE,
-    SERIES
+    MOVIE = 'MOVIE',
+    SERIES = 'SERIES'
 }
