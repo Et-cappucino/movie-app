@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   providers: [
     WatchableService, 
     GenreService
-  ]
+  ],
+  exports: [WatchableService]
 })
 export class WatchableModule {}
