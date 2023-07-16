@@ -25,4 +25,12 @@ export class Profile {
         inverseJoinColumn: { name: 'watchable_id', referencedColumnName: 'id' }
     })
     watchlist: Watchable[];
+
+    @ManyToMany(() => Watchable)
+    @JoinTable({
+        name: 'favorites', 
+        joinColumn: { name: 'profile_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'watchable_id', referencedColumnName: 'id' }
+    })
+    favorites: Watchable[];
 }

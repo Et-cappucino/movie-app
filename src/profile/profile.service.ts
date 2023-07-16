@@ -22,7 +22,8 @@ export class ProfileService {
   findAll() {
     return this.profileRepository.find({
       relations: {
-        watchlist: true
+        watchlist: true,
+        favorites: true
       }
     });
   }
@@ -31,7 +32,8 @@ export class ProfileService {
     const profile = await this.profileRepository.findOne({
       where: { id }, 
       relations: {
-        watchlist: true
+        watchlist: true,
+        favorites: true
       }
     });
     
