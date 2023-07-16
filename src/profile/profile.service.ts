@@ -16,11 +16,20 @@ export class ProfileService {
   }
 
   findAll() {
-    return this.profileRepository.find();
+    return this.profileRepository.find({
+      relations: {
+        watchlist: true
+      }
+    });
   }
 
   async findOne(id: number) {
-    const profile = await this.profileRepository.findOneBy({ id });
+    const profile = await this.profileRepository.findOne({
+      where: { id }, 
+      relations: {
+        watchlist: true
+      }
+    });
     
     if (!profile) throw new NotFoundException(`Profile with id: ${id} not found`)
 
