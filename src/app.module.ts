@@ -5,6 +5,7 @@ import { ProfileModule } from './profile/profile.module';
 import { UserModule } from './user/user.module';
 import { WatchableModule } from './watchable/watchable.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { WatchlistModule } from './watchlist/watchlist.module';
     DatabaseModule, 
     UserModule, 
     WatchableModule, 
-    WatchlistModule,
+    WatchlistModule, 
+    FavoritesModule,
   ],
   controllers: [],
   providers: [],
