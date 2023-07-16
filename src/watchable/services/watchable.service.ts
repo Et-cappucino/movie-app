@@ -19,7 +19,8 @@ export class WatchableService {
   findAll() {
     return this.watchableRepository.find({
       relations: {
-        genres: true
+        genres: true,
+        backdrops: true
       }
     });
   }
@@ -28,7 +29,8 @@ export class WatchableService {
     const watchable = await this.watchableRepository.findOne({
       where: { id },
       relations: {
-        genres: true
+        genres: true,
+        backdrops: true
       }
     });
     

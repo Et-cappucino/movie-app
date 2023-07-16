@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { WatchableType } from "../enums";
 import { Genre } from "./genre.entity";
+import { Backdrop } from "./backdrop.entity";
 
 @Entity()
 export class Watchable {
@@ -45,4 +46,7 @@ export class Watchable {
         inverseJoinColumn: { name: 'genre', referencedColumnName: 'genre' }
     })
     genres: Genre[];
+
+    @OneToMany(() => Backdrop, (backdrop) => backdrop.watchable)
+    backdrops: Backdrop[];
 }
