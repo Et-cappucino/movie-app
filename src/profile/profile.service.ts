@@ -23,7 +23,8 @@ export class ProfileService {
     return this.profileRepository.find({
       relations: {
         watchlist: true,
-        favorites: true
+        favorites: true,
+        favoriteGenres: true
       }
     });
   }
@@ -33,7 +34,8 @@ export class ProfileService {
       where: { id }, 
       relations: {
         watchlist: true,
-        favorites: true
+        favorites: true,
+        favoriteGenres: true
       }
     });
     

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
 import { User } from "src/user/entities/user.entity";
-import { Watchable } from "src/watchable/entities";
+import { Watchable, Genre } from "src/watchable/entities";
 
 @Entity()
 export class Profile {
@@ -33,4 +33,12 @@ export class Profile {
         inverseJoinColumn: { name: 'watchable_id', referencedColumnName: 'id' }
     })
     favorites: Watchable[];
+
+    @ManyToMany(() => Genre)
+    @JoinTable({
+        name: 'favorite_genres', 
+        joinColumn: { name: 'profile_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'genre', referencedColumnName: 'genre' }
+    })
+    favoriteGenres: Genre[];
 }
