@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Put, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FavoriteWatchablesService } from './favorites.service';
 
+@ApiTags('Favorite-Watchables-Controller')
 @Controller('api/favorites')
 export class FavoriteWatchablesController {
 

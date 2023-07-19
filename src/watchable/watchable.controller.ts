@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 
+@ApiTags('Watchable-Controller')
 @Controller('api/watchables')
 export class WatchableController {
   constructor(private readonly watchableService: WatchableService) {}

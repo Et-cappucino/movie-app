@@ -1,8 +1,10 @@
 import { Controller, Get, Param, Delete, Put, Body, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FavoriteGenresService } from './favorite-genres.service';
 import { UpdateFavoriteGenresDto } from './dto/favorite-genres.dto';
 import { GenreEnum } from 'src/watchable/enums';
 
+@ApiTags('Favorite-Genres-Controller')
 @Controller('api/genres')
 export class FavoriteGenresController {
   constructor(private readonly favoriteGenresService: FavoriteGenresService) {}

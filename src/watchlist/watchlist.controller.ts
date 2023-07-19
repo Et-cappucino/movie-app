@@ -1,6 +1,8 @@
 import { Controller, Param, Get, Delete, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { WatchlistService } from './watchlist.service';
 
+@ApiTags('Watchlist-Controller')
 @Controller('api/watchlist')
 export class WatchlistController {
     constructor(private readonly watchlistService: WatchlistService) {}
