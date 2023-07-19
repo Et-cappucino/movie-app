@@ -9,18 +9,35 @@ export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>) {}
-    
+  
+  save(profile: Profile) {
+    return this.profileRepository.save(profile);
+  }  
+  
   create(createProfileDto: CreateProfileDto) {
     const profile = this.profileRepository.create(createProfileDto)
-    return this.profileRepository.save(profile);
+    return this.save(profile);
   }
 
   findAll() {
-    return this.profileRepository.find();
+    return this.profileRepository.find({
+      relations: {
+        watchlist: true,
+        favorites: true,
+        favoriteGenres: true
+      }
+    });
   }
 
   async findOne(id: number) {
-    const profile = await this.profileRepository.findOneBy({ id });
+    const profile = await this.profileRepository.findOne({
+      where: { id }, 
+      relations: {
+        watchlist: true,
+        favorites: true,
+        favoriteGenres: true
+      }
+    });
     
     if (!profile) throw new NotFoundException(`Profile with id: ${id} not found`)
 
@@ -29,7 +46,7 @@ export class ProfileService {
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {
     const profile = await this.findOne(id)
-    return this.profileRepository.save({ ...profile, ...updateProfileDto });
+    return this.save({ ...profile, ...updateProfileDto });
   }
 
   async remove(id: number) {
