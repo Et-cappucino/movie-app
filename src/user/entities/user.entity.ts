@@ -18,7 +18,7 @@ export class User {
     password: string;
     
     @ApiProperty()
-    @Column({ default: false })
+    @Column({ name: 'is_admin', default: false })
     isAdmin: boolean;
 
     @ApiProperty({ type: () => Profile })

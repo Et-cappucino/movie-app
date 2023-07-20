@@ -7,20 +7,20 @@ import { ApiProperty } from "@nestjs/swagger";
 export class Profile {
 
     @ApiProperty()
-    @PrimaryGeneratedColumn({ type: 'bigint' })
+    @PrimaryGeneratedColumn()
     id: number
 
     @ApiProperty()
-    @Column({ default: '' })
+    @Column({ name: 'first_name', default: '' })
     firstName: string;
 
     @ApiProperty()
-    @Column({ default: '' })
+    @Column({ name: 'last_name', default: '' })
     lastName: string;
 
     @ApiProperty({ type: () => User })
     @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
-    @JoinColumn()
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
     @ApiProperty({ type: () => Watchable, isArray: true })
