@@ -48,7 +48,7 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    await this.validateEmailUnique(updateUserDto.email);
+    await this.validateEmailUnique(updateUserDto.email, id);
     
     const user = await this.findOne(id)
     return this.userRepository.save({ ...user, ...updateUserDto });
@@ -59,11 +59,11 @@ export class UserService {
     return this.userRepository.remove(user);
   }
 
-  private async validateEmailUnique(email: string) {
+  private async validateEmailUnique(email: string, id?: number) {
     const existingUser = await this.userRepository.findOne({
       where: { email }
     })
-    if (existingUser) {
+    if (existingUser && id !== existingUser.id) {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
   }
