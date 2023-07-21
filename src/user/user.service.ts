@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
+import { Page } from 'src/utils/types/page.interface';
 
 @Injectable()
 export class UserService {
@@ -26,12 +27,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find({
+  async findAll(pageNumber: number, pageSize: number) {
+    const users = await this.userRepository.find({
       relations: {
         profile: true
-      }
+      },
+      skip: (pageNumber - 1) * pageSize,
+      take: pageSize
     });
+    
+    return this.getPage(users, pageSize);
   }
 
   async findOne(id: number) {
@@ -66,5 +71,17 @@ export class UserService {
     if (existingUser && id !== existingUser.id) {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
+  }
+
+  private async getPage(content: User[], pageSize: number) {
+    const totalElements = await this.userRepository.count()
+
+    const page: Page = {
+      numberOfElements: content.length,
+      totalPages: Math.ceil(totalElements / pageSize),
+      totalElements,
+      content
+    }
+    return page
   }
 }

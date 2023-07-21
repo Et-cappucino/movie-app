@@ -3,6 +3,7 @@ import { CreateProfileDto, UpdateProfileDto } from './dto';
 import { Repository } from 'typeorm';
 import { Profile } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Page } from 'src/utils/types/page.interface';
 
 @Injectable()
 export class ProfileService {
@@ -19,14 +20,18 @@ export class ProfileService {
     return this.save(profile);
   }
 
-  findAll() {
-    return this.profileRepository.find({
+  async findAll(pageNumber: number, pageSize: number) {
+    const profiles = await this.profileRepository.find({
       relations: {
         watchlist: true,
         favorites: true,
         favoriteGenres: true
-      }
+      },
+      skip: (pageNumber - 1) * pageSize,
+      take: pageSize
     });
+
+    return this.getPage(profiles, pageSize);
   }
 
   async findOne(id: number) {
@@ -52,5 +57,17 @@ export class ProfileService {
   async remove(id: number) {
     const profile = await this.findOne(id)
     return this.profileRepository.remove(profile);
+  }
+
+  private async getPage(content: Profile[], pageSize: number) {
+    const totalElements = await this.profileRepository.count()
+
+    const page: Page = {
+      numberOfElements: content.length,
+      totalPages: Math.ceil(totalElements / pageSize),
+      totalElements,
+      content
+    }
+    return page
   }
 }

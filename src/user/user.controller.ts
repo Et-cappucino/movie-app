@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
@@ -21,8 +21,8 @@ export class UserController {
 
   @ApiOkResponse({ type: User, isArray: true })
   @Get()
-  findAllUsers() {
-    return this.userService.findAll();
+  findAll(@Query('pageNumber') pageNumber: number = 1, @Query('pageSize') pageSize: number = 5) {
+    return this.userService.findAll(pageNumber, pageSize);
   }
 
   @ApiOkResponse({ type: User })
