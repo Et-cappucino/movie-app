@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn } from "typeorm";
 import { Profile } from "src/profile/entities/profile.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -20,6 +20,10 @@ export class User {
     @ApiProperty()
     @Column({ name: 'is_admin', default: false })
     isAdmin: boolean;
+
+    @ApiProperty()
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
 
     @ApiProperty({ type: () => Profile })
     @OneToOne(() => Profile, (profile) => profile.user)
