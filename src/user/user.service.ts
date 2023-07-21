@@ -28,7 +28,7 @@ export class UserService {
   }
 
   async findAll(pageNumber: number, pageSize: number) {
-    const users = await this.userRepository.find({
+    const [users, count] = await this.userRepository.findAndCount({
       relations: {
         profile: true
       },
@@ -36,7 +36,7 @@ export class UserService {
       take: pageSize
     });
     
-    return this.getPage(users, pageSize);
+    return this.getPage(users, count, pageSize);
   }
 
   async findOne(id: number) {
@@ -73,9 +73,7 @@ export class UserService {
     }
   }
 
-  private async getPage(content: User[], pageSize: number) {
-    const totalElements = await this.userRepository.count()
-
+  private async getPage(content: User[], totalElements: number, pageSize: number) {
     const page: Page = {
       numberOfElements: content.length,
       totalPages: Math.ceil(totalElements / pageSize),

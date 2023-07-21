@@ -21,7 +21,7 @@ export class ProfileService {
   }
 
   async findAll(pageNumber: number, pageSize: number) {
-    const profiles = await this.profileRepository.find({
+    const [profiles, count] = await this.profileRepository.findAndCount({
       relations: {
         watchlist: true,
         favorites: true,
@@ -31,7 +31,7 @@ export class ProfileService {
       take: pageSize
     });
 
-    return this.getPage(profiles, pageSize);
+    return this.getPage(profiles, count, pageSize);
   }
 
   async findOne(id: number) {
@@ -59,9 +59,7 @@ export class ProfileService {
     return this.profileRepository.remove(profile);
   }
 
-  private async getPage(content: Profile[], pageSize: number) {
-    const totalElements = await this.profileRepository.count()
-
+  private async getPage(content: Profile[], totalElements: number, pageSize: number) {
     const page: Page = {
       numberOfElements: content.length,
       totalPages: Math.ceil(totalElements / pageSize),

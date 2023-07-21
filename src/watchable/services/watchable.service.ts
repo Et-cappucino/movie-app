@@ -18,7 +18,7 @@ export class WatchableService {
   }
 
   async findAll(pageNumber: number, pageSize: number) {
-    const watchables = await this.watchableRepository.find({
+    const [watchables, count] = await this.watchableRepository.findAndCount({
       relations: {
         genres: true,
         backdrops: true
@@ -27,7 +27,7 @@ export class WatchableService {
       take: pageSize
     });
     
-    return this.getPage(watchables, pageSize);
+    return this.getPage(watchables, count, pageSize);
   }
 
   async findOne(id: number) {
@@ -54,9 +54,7 @@ export class WatchableService {
     return this.watchableRepository.remove(watchable);
   }
 
-  private async getPage(content: Watchable[], pageSize: number) {
-    const totalElements = await this.watchableRepository.count()
-
+  private async getPage(content: Watchable[], totalElements: number, pageSize: number) {
     const page: Page = {
       numberOfElements: content.length,
       totalPages: Math.ceil(totalElements / pageSize),
