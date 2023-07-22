@@ -5,15 +5,15 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
-import { Page } from 'src/utils/types/page.interface';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
-    private readonly profileService: ProfileService
+    private readonly profileService: ProfileService,
+    private readonly pagainationService: PaginationService
   ) {}
   
   async signUp(createUserDto: CreateUserDto) {
@@ -36,7 +36,7 @@ export class UserService {
       take: pageSize
     });
     
-    return this.getPage(users, count, pageSize);
+    return this.pagainationService.paginate(users, count, pageSize);
   }
 
   async findOne(id: number) {
@@ -71,15 +71,5 @@ export class UserService {
     if (existingUser && id !== existingUser.id) {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
-  }
-
-  private async getPage(content: User[], totalElements: number, pageSize: number) {
-    const page: Page = {
-      numberOfElements: content.length,
-      totalPages: Math.ceil(totalElements / pageSize),
-      totalElements,
-      content
-    }
-    return page
   }
 }

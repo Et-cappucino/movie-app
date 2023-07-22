@@ -3,13 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWatchableDto, UpdateWatchableDto } from '../dto';
 import { Watchable } from '../entities';
-import { Page } from 'src/utils/types/page.interface';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class WatchableService {
   constructor(
     @InjectRepository(Watchable)
-    private readonly watchableRepository: Repository<Watchable>
+    private readonly watchableRepository: Repository<Watchable>,
+    private readonly paginationService: PaginationService
   ) {}
 
   create(createWatchableDto: CreateWatchableDto) {
@@ -26,8 +27,8 @@ export class WatchableService {
       skip: (pageNumber - 1) * pageSize,
       take: pageSize
     });
-    
-    return this.getPage(watchables, count, pageSize);
+
+    return this.paginationService.paginate(watchables, count, pageSize);
   }
 
   async findOne(id: number) {
@@ -52,15 +53,5 @@ export class WatchableService {
   async remove(id: number) {
     const watchable = await this.findOne(id)
     return this.watchableRepository.remove(watchable);
-  }
-
-  private async getPage(content: Watchable[], totalElements: number, pageSize: number) {
-    const page: Page = {
-      numberOfElements: content.length,
-      totalPages: Math.ceil(totalElements / pageSize),
-      totalElements,
-      content
-    }
-    return page
   }
 }
