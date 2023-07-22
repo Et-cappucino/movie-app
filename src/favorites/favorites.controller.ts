@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Put, Delete, Query } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { FavoriteWatchablesService } from './favorites.service';
 import { Watchable } from 'src/watchable/entities';
@@ -12,8 +12,10 @@ export class FavoriteWatchablesController {
     @ApiOkResponse({ type: Watchable, isArray: true })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
     @Get(':profileId')
-    getProfileFavorites(@Param('profileId') profileId: number) {
-        return this.favoritesService.getProfileFavorites(profileId);
+    getProfileFavorites(@Param('profileId') profileId: number,
+                        @Query('pageNumber') pageNumber: number = 0, 
+                        @Query('pageSize') pageSize: number = 5) {
+        return this.favoritesService.getProfileFavorites(profileId, pageNumber, pageSize);
     }
   
     @ApiOkResponse()

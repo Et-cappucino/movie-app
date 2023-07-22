@@ -1,4 +1,4 @@
-import { Controller, Param, Get, Delete, Put } from '@nestjs/common';
+import { Controller, Param, Get, Delete, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { WatchlistService } from './watchlist.service';
 import { Watchable } from 'src/watchable/entities';
@@ -11,8 +11,10 @@ export class WatchlistController {
     @ApiOkResponse({ type: Watchable, isArray: true })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
     @Get(':profileId')
-    getProfileWatchlist(@Param('profileId') profileId: number) {
-        return this.watchlistService.getProfileWatchlist(profileId);
+    getProfileWatchlist(@Param('profileId') profileId: number,
+                        @Query('pageNumber') pageNumber: number = 0, 
+                        @Query('pageSize') pageSize: number = 5) {
+        return this.watchlistService.getProfileWatchlist(profileId, pageNumber, pageSize);
     }
   
     @ApiOkResponse()
