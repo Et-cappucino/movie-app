@@ -36,7 +36,7 @@ export class UserService {
       take: pageSize
     });
     
-    return this.pagainationService.paginate(users, count, pageSize);
+    return this.pagainationService.paginate(users, pageNumber, pageSize, count);
   }
 
   async findOne(id: number) {

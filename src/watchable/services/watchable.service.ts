@@ -28,7 +28,7 @@ export class WatchableService {
       take: pageSize
     });
 
-    return this.paginationService.paginate(watchables, count, pageSize);
+    return this.paginationService.paginate(watchables, pageNumber, pageSize, count);
   }
 
   async findOne(id: number) {

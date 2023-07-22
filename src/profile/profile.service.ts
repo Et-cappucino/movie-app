@@ -33,7 +33,7 @@ export class ProfileService {
       take: pageSize
     });
 
-    return this.pagainationService.paginate(profiles, count, pageSize);
+    return this.pagainationService.paginate(profiles, pageNumber, pageSize, count);
   }
 
   async findOne(id: number) {
