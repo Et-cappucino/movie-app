@@ -20,7 +20,7 @@ export class ProfileController {
 
   @ApiOkResponse({ type: Profile, isArray: true })
   @Get()
-  findAll(@Query('pageNumber') pageNumber: number = 1, @Query('pageSize') pageSize: number = 5) {
+  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
     return this.profileService.findAll(pageNumber, pageSize);
   }
 

@@ -21,7 +21,7 @@ export class UserController {
 
   @ApiOkResponse({ type: User, isArray: true })
   @Get()
-  findAll(@Query('pageNumber') pageNumber: number = 1, @Query('pageSize') pageSize: number = 5) {
+  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
     return this.userService.findAll(pageNumber, pageSize);
   }
 

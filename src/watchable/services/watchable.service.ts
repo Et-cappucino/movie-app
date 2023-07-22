@@ -24,7 +24,7 @@ export class WatchableService {
         genres: true,
         backdrops: true
       },
-      skip: (pageNumber - 1) * pageSize,
+      skip: pageNumber * pageSize,
       take: pageSize
     });
 

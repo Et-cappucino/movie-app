@@ -29,7 +29,7 @@ export class ProfileService {
         favorites: true,
         favoriteGenres: true
       },
-      skip: (pageNumber - 1) * pageSize,
+      skip: pageNumber * pageSize,
       take: pageSize
     });
 

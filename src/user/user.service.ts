@@ -32,7 +32,7 @@ export class UserService {
       relations: {
         profile: true
       },
-      skip: (pageNumber - 1) * pageSize,
+      skip: pageNumber * pageSize,
       take: pageSize
     });
     
