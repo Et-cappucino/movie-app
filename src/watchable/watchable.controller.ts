@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
@@ -18,10 +18,14 @@ export class WatchableController {
     return this.watchableService.create(createWatchableDto);
   }
 
-  @ApiOkResponse({ type: Watchable, isArray: true })
+  @ApiOkResponse({ 
+    type: Watchable, 
+    isArray: true,
+    description: 'Retrieve all Watchables with pagination support.' 
+  })
   @Get()
-  findAll() {
-    return this.watchableService.findAll();
+  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
+    return this.watchableService.findAll(pageNumber, pageSize);
   }
 
   @ApiOkResponse({ type: Watchable })

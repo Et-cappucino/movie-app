@@ -3,12 +3,15 @@ import { CreateProfileDto, UpdateProfileDto } from './dto';
 import { Repository } from 'typeorm';
 import { Profile } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
-    private readonly profileRepository: Repository<Profile>) {}
+    private readonly profileRepository: Repository<Profile>,
+    private readonly pagainationService: PaginationService
+  ) {}
   
   save(profile: Profile) {
     return this.profileRepository.save(profile);
@@ -19,14 +22,13 @@ export class ProfileService {
     return this.save(profile);
   }
 
-  findAll() {
-    return this.profileRepository.find({
-      relations: {
-        watchlist: true,
-        favorites: true,
-        favoriteGenres: true
-      }
+  async findAll(pageNumber: number, pageSize: number) {
+    const [profiles, count] = await this.profileRepository.findAndCount({
+      skip: pageNumber * pageSize,
+      take: pageSize
     });
+
+    return this.pagainationService.paginate(profiles, pageNumber, pageSize, count);
   }
 
   async findOne(id: number) {

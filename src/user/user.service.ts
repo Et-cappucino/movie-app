@@ -5,14 +5,15 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
-    private readonly profileService: ProfileService
+    private readonly profileService: ProfileService,
+    private readonly pagainationService: PaginationService
   ) {}
   
   async signUp(createUserDto: CreateUserDto) {
@@ -26,12 +27,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find({
+  async findAll(pageNumber: number, pageSize: number) {
+    const [users, count] = await this.userRepository.findAndCount({
       relations: {
         profile: true
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize
     });
+    
+    return this.pagainationService.paginate(users, pageNumber, pageSize, count);
   }
 
   async findOne(id: number) {
@@ -48,7 +53,7 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    await this.validateEmailUnique(updateUserDto.email);
+    await this.validateEmailUnique(updateUserDto.email, id);
     
     const user = await this.findOne(id)
     return this.userRepository.save({ ...user, ...updateUserDto });
@@ -59,11 +64,11 @@ export class UserService {
     return this.userRepository.remove(user);
   }
 
-  private async validateEmailUnique(email: string) {
+  private async validateEmailUnique(email: string, id?: number) {
     const existingUser = await this.userRepository.findOne({
       where: { email }
     })
-    if (existingUser) {
+    if (existingUser && id !== existingUser.id) {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
   }

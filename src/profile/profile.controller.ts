@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto';
@@ -18,10 +18,14 @@ export class ProfileController {
     return this.profileService.create(createProfileDto);
   }
 
-  @ApiOkResponse({ type: Profile, isArray: true })
+  @ApiOkResponse({ 
+    type: Profile, 
+    isArray: true,
+    description: 'Retrieve all Profiles with pagination support.' 
+  })
   @Get()
-  findAllProfiles() {
-    return this.profileService.findAll();
+  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
+    return this.profileService.findAll(pageNumber, pageSize);
   }
 
   @ApiOkResponse({ type: Profile })
