@@ -24,11 +24,6 @@ export class ProfileService {
 
   async findAll(pageNumber: number, pageSize: number) {
     const [profiles, count] = await this.profileRepository.findAndCount({
-      relations: {
-        watchlist: true,
-        favorites: true,
-        favoriteGenres: true
-      },
       skip: pageNumber * pageSize,
       take: pageSize
     });

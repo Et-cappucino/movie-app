@@ -20,10 +20,6 @@ export class WatchableService {
 
   async findAll(pageNumber: number, pageSize: number) {
     const [watchables, count] = await this.watchableRepository.findAndCount({
-      relations: {
-        genres: true,
-        backdrops: true
-      },
       skip: pageNumber * pageSize,
       take: pageSize
     });
