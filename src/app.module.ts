@@ -7,6 +7,7 @@ import { WatchableModule } from './watchable/watchable.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FavoriteGenresModule } from './favorite-genres/favorite-genres.module';
+import { ProfilePictureModule } from './profile-picture/profile-picture.module';
 
 
 @Module({
@@ -18,7 +19,8 @@ import { FavoriteGenresModule } from './favorite-genres/favorite-genres.module';
     WatchableModule, 
     WatchlistModule, 
     FavoritesModule, 
-    FavoriteGenresModule,
+    FavoriteGenresModule, 
+    ProfilePictureModule,
   ],
   controllers: [],
   providers: [],
