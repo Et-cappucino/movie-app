@@ -23,7 +23,7 @@ export class PaginationService {
   }
 
   private getPage(content: any[], totalElements: number, pageSize: number) {
-    const page: Page = {
+    const page: Page<any> = {
       numberOfElements: content.length,
       totalPages: Math.ceil(totalElements / pageSize),
       totalElements,

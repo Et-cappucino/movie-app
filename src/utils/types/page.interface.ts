@@ -1,8 +1,5 @@
-import { Watchable } from "src/watchable/entities";
-import { Profile } from "src/profile/entities/profile.entity";
-import { User } from "src/user/entities/user.entity";
 
-export interface Page {
+export interface Page<T> {
     
     numberOfElements: number,
     
@@ -10,5 +7,5 @@ export interface Page {
     
     totalElements: number,
     
-    content: Watchable[] | Profile[] | User[]
+    content: T[]
 }
