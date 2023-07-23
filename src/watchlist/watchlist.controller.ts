@@ -8,7 +8,11 @@ import { Watchable } from 'src/watchable/entities';
 export class WatchlistController {
     constructor(private readonly watchlistService: WatchlistService) {}
 
-    @ApiOkResponse({ type: Watchable, isArray: true })
+    @ApiOkResponse({ 
+        type: Watchable, 
+        isArray: true,
+        description: 'Retrieve the watchlist of the User with pagination support.' 
+    })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
     @Get(':profileId')
     getProfileWatchlist(@Param('profileId') profileId: number,

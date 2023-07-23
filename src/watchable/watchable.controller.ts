@@ -18,7 +18,11 @@ export class WatchableController {
     return this.watchableService.create(createWatchableDto);
   }
 
-  @ApiOkResponse({ type: Watchable, isArray: true })
+  @ApiOkResponse({ 
+    type: Watchable, 
+    isArray: true,
+    description: 'Retrieve all Watchables with pagination support.' 
+  })
   @Get()
   findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
     return this.watchableService.findAll(pageNumber, pageSize);

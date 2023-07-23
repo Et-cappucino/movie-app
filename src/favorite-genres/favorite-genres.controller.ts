@@ -10,7 +10,11 @@ import { Genre } from 'src/watchable/entities';
 export class FavoriteGenresController {
   constructor(private readonly favoriteGenresService: FavoriteGenresService) {}
 
-  @ApiOkResponse({ type: Genre, isArray: true })
+  @ApiOkResponse({ 
+    type: Genre,
+    isArray: true,
+    description: 'Retrieve the favorite genre list of the User.' 
+  })
   @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
   @Get(':profileId')
   getProfileFavoriteGenres(@Param('profileId') profileId: number) {

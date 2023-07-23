@@ -9,7 +9,11 @@ export class FavoriteWatchablesController {
 
     constructor(private readonly favoritesService: FavoriteWatchablesService) {}
 
-    @ApiOkResponse({ type: Watchable, isArray: true })
+    @ApiOkResponse({ 
+        type: Watchable, 
+        isArray: true,
+        description: 'Retrieve the favorites of the User with pagination support.' 
+    })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
     @Get(':profileId')
     getProfileFavorites(@Param('profileId') profileId: number,

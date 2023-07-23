@@ -19,7 +19,11 @@ export class UserController {
     return this.userService.signUp(createUserDto);
   }
 
-  @ApiOkResponse({ type: User, isArray: true })
+  @ApiOkResponse({ 
+    type: User, 
+    isArray: true,
+    description: 'Retrieve all Users with pagination support.' 
+  })
   @Get()
   findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
     return this.userService.findAll(pageNumber, pageSize);

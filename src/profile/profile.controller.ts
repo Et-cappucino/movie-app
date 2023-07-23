@@ -18,7 +18,11 @@ export class ProfileController {
     return this.profileService.create(createProfileDto);
   }
 
-  @ApiOkResponse({ type: Profile, isArray: true })
+  @ApiOkResponse({ 
+    type: Profile, 
+    isArray: true,
+    description: 'Retrieve all Profiles with pagination support.' 
+  })
   @Get()
   findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
     return this.profileService.findAll(pageNumber, pageSize);
