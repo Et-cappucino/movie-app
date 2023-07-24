@@ -1,14 +1,16 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfilePictureService } from './profile-picture.service';
-import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 
 @Controller('api/images')
 export class ProfilePictureController {
   constructor(private readonly profilePictureService: ProfilePictureService) {}
 
-  @Post()
-  uploadProfilePicture(@Body() createProfilePictureDto: CreateProfilePictureDto) {
-    return this.profilePictureService.uploadProfilePicture(createProfilePictureDto);
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadProfilePicture(@UploadedFile() imageFile: Express.Multer.File) {
+    this.profilePictureService.uploadProfilePicture(imageFile);
   }
 
   @Get(':id')
@@ -18,6 +20,6 @@ export class ProfilePictureController {
 
   @Delete(':id')
   removeProfilePicture(@Param('id') id: number) {
-    return this.profilePictureService.removeProfilePicture(id);
+    this.profilePictureService.removeProfilePicture(id);
   }
 }
