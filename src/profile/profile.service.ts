@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateProfileDto, UpdateProfileDto } from './dto';
-import { Repository } from 'typeorm';
-import { Profile } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateProfileDto, UpdateProfileDto } from './dto';
+import { Profile } from './entities/profile.entity';
 import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
@@ -37,7 +37,8 @@ export class ProfileService {
       relations: {
         watchlist: true,
         favorites: true,
-        favoriteGenres: true
+        favoriteGenres: true,
+        profilePicture: true
       }
     });
     

@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 import { Watchable, Genre } from "src/watchable/entities";
-import { ApiProperty } from "@nestjs/swagger";
+import { ProfilePicture } from "src/profile-picture/entities/profile-picture.entity";
 
 @Entity()
 export class Profile {
@@ -22,6 +23,9 @@ export class Profile {
     @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @OneToOne(() => ProfilePicture, (profilePicture) => profilePicture.profile, { nullable: true })
+    profilePicture: ProfilePicture;
 
     @ApiProperty({ type: () => Watchable, isArray: true })
     @ManyToMany(() => Watchable)

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from "typeorm";
+import { Profile } from "src/profile/entities/profile.entity";
 
 @Entity()
 export class ProfilePicture {
@@ -17,4 +18,8 @@ export class ProfilePicture {
 
     @Column({ name: 'image_file_data', type: 'longblob' })
     imageData: Buffer;
+
+    @OneToOne(() => Profile, (profile) => profile.profilePicture, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'profile_id' })
+    profile: Profile;
 }
