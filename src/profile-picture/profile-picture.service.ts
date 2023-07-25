@@ -3,22 +3,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { ProfilePicture } from './entities/profile-picture.entity';
+import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
 export class ProfilePictureService {
   constructor(
     @InjectRepository(ProfilePicture)
-    private readonly profilePictureRepository: Repository<ProfilePicture>
+    private readonly profilePictureRepository: Repository<ProfilePicture>,
+    private readonly profileService: ProfileService
   ) {}
   
-  uploadProfilePicture(imageFile: Express.Multer.File) {
+  async uploadProfilePicture(imageFile: Express.Multer.File, profileId: number) {
     const imageDto: CreateProfilePictureDto = {
       name: imageFile.originalname.substring(0, imageFile.originalname.lastIndexOf('.')),
       type: imageFile.mimetype,
       imageData: imageFile.buffer
     }
-    
     const image = this.profilePictureRepository.create(imageDto);
+
+    const profile = await this.profileService.findOne(profileId);
+    image.profile = profile
+    image.id = profile.id
+
     return this.profilePictureRepository.save(image);
   }
 

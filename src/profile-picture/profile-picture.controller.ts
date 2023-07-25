@@ -7,10 +7,10 @@ import { ProfilePictureService } from './profile-picture.service';
 export class ProfilePictureController {
   constructor(private readonly profilePictureService: ProfilePictureService) {}
 
-  @Post('upload')
+  @Post('upload/:profileId')
   @UseInterceptors(FileInterceptor('file'))
-  uploadProfilePicture(@UploadedFile() imageFile: Express.Multer.File) {
-    this.profilePictureService.uploadProfilePicture(imageFile);
+  uploadProfilePicture(@UploadedFile() imageFile: Express.Multer.File, @Param('profileId') profileId: number) {
+    this.profilePictureService.uploadProfilePicture(imageFile, profileId);
   }
 
   @Get(':id')
