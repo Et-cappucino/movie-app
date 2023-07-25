@@ -14,18 +14,17 @@ export class ProfilePictureService {
   ) {}
   
   async uploadProfilePicture(imageFile: Express.Multer.File, profileId: number) {
-    const imageDto: CreateProfilePictureDto = {
-      name: imageFile.originalname.substring(0, imageFile.originalname.lastIndexOf('.')),
-      type: imageFile.mimetype,
-      imageData: imageFile.buffer
-    }
-    const image = this.profilePictureRepository.create(imageDto);
+    const profilePicture = this.imageFileToProfilePicture(imageFile);
 
     const profile = await this.profileService.findOne(profileId);
-    image.profile = profile
-    image.id = profile.id
+    if(profile.profilePicture) {
+      this.update(profilePicture)
+    }
+    
+    profilePicture.profile = profile
+    profilePicture.id = profile.id
 
-    return this.profilePictureRepository.save(image);
+    return this.profilePictureRepository.save(profilePicture);
   }
 
   async getProfilePicture(id: number) {
@@ -39,5 +38,18 @@ export class ProfilePictureService {
   async removeProfilePicture(id: number) {
     const image = await this.getProfilePicture(id)
     return this.profilePictureRepository.remove(image);
+  }
+
+  private imageFileToProfilePicture(imageFile: Express.Multer.File) {
+    const imageDto: CreateProfilePictureDto = {
+      name: imageFile.originalname.substring(0, imageFile.originalname.lastIndexOf('.')),
+      type: imageFile.mimetype,
+      imageData: imageFile.buffer
+    }
+    return this.profilePictureRepository.create(imageDto);
+  }
+
+  private update(current: ProfilePicture) {
+    current.uploadedAt = new Date()
   }
 }
