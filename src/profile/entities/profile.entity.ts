@@ -24,6 +24,7 @@ export class Profile {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
+    @ApiProperty({ type: () => ProfilePicture, required: false })
     @OneToOne(() => ProfilePicture, (profilePicture) => profilePicture.profile, { nullable: true })
     profilePicture: ProfilePicture;
 
