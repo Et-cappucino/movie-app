@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class ActorService {
   constructor(
     @InjectRepository(Actor)
-    private readonly actorRepository: Repository<Actor>
+    private readonly actorRepository: Repository<Actor>,
+    private readonly paginationService: PaginationService
   ){}
 
   registerActor(createActorDto: CreateActorDto) {
@@ -16,8 +18,13 @@ export class ActorService {
     return this.actorRepository.save(actor);
   }
 
-  findAll() {
-    return this.actorRepository.find();
+  async findAll(pageNumber: number, pageSize: number) {
+    const [actors, count] = await this.actorRepository.findAndCount({
+      skip: pageNumber * pageSize,
+      take: pageSize
+    });
+
+    return this.paginationService.paginate(actors, pageNumber, pageSize, count);
   }
 
   async findActor(id: number) {

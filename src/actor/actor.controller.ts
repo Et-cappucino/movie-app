@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { ActorService } from './actor.service';
 import { CreateActorDto, UpdateActorDto } from './dto';
 
@@ -12,8 +12,8 @@ export class ActorController {
   }
 
   @Get()
-  findAll() {
-    return this.actorService.findAll();
+  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 10) {
+    return this.actorService.findAll(pageNumber, pageSize);
   }
 
   @Get(':id')
