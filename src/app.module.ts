@@ -8,6 +8,7 @@ import { WatchlistModule } from './watchlist/watchlist.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FavoriteGenresModule } from './favorite-genres/favorite-genres.module';
 import { ProfilePictureModule } from './profile-picture/profile-picture.module';
+import { ActorModule } from './actor/actor.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { ProfilePictureModule } from './profile-picture/profile-picture.module';
     WatchlistModule, 
     FavoritesModule, 
     FavoriteGenresModule, 
-    ProfilePictureModule,
+    ProfilePictureModule, 
+    ActorModule,
   ],
   controllers: [],
   providers: [],
