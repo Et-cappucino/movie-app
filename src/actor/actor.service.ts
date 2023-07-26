@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateActorDto, UpdateActorDto } from './dto';
+import { Actor } from './entities/actor.entity';
 
 @Injectable()
 export class ActorService {
+  constructor(
+    @InjectRepository(Actor)
+    private readonly actorRepository: Repository<Actor>
+  ){}
 
   registerActor(createActorDto: CreateActorDto) {
-    return 'This action adds a new actor';
+    const actor = this.actorRepository.create(createActorDto);
+    return this.actorRepository.save(actor);
   }
 
   findAll() {
-    return `This action returns all actor`;
+    return this.actorRepository.find();
   }
 
-  findActor(id: number) {
-    return `This action returns a #${id} actor`;
+  async findActor(id: number) {
+    const actor = await this.actorRepository.findOneBy({ id });
+
+    if (!actor) throw new NotFoundException(`Actor with id: ${id} not found`)
+
+    return actor;
   }
 
-  updateActor(id: number, updateActorDto: UpdateActorDto) {
-    return `This action updates a #${id} actor`;
+  async updateActor(id: number, updateActorDto: UpdateActorDto) {
+    const actor = await this.findActor(id);
+    return this.actorRepository.save({ ...actor, ...updateActorDto });
   }
 
-  removeActor(id: number) {
-    return `This action removes a #${id} actor`;
+  async removeActor(id: number) {
+    const actor = await this.findActor(id);
+    return this.actorRepository.remove(actor);
   }
 }
