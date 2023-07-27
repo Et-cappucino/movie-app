@@ -11,6 +11,7 @@ import { PaginationModule } from 'src/utils/pagination/pagination.module';
     PaginationModule
   ],
   controllers: [ActorController],
-  providers: [ActorService]
+  providers: [ActorService],
+  exports: [ActorService]
 })
 export class ActorModule {}

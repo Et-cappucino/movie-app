@@ -1,17 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { ActorService } from 'src/actor/actor.service';
+import { WatchableService } from 'src/watchable/services';
 
 @Injectable()
 export class CastService {
+  constructor(
+    private readonly actorService: ActorService,
+    private readonly watchableService: WatchableService
+  ) {}
 
-  getWatchableCast(watchableId: number) {
-    return `This action returns a watchable cast`;
+  async getWatchableCast(watchableId: number) {
+    const watchable = await this.watchableService.findOne(watchableId);
+    return watchable.cast
   }
 
-  addToCast(watchableId: number, actorId: number) {
-    return 'This action adds an actor to a watchable cast';
+  async addToCast(watchableId: number, actorId: number) {
+    const watchable = await this.watchableService.findOne(watchableId);
+    const actor = await this.actorService.findActor(actorId);
+    
+    watchable.cast.push(actor);    
+    this.watchableService.save(watchable);
   }
 
-  removeFromCast(watchableId: number, actorId: number) {
-    return `This action removes an actor from a watchable cast`;
+  async removeFromCast(watchableId: number, actorId: number) {
+    const watchable = await this.watchableService.findOne(watchableId);
+    const actor = await this.actorService.findActor(actorId);
+
+    watchable.cast = watchable.cast.filter((toBeRemoved) => actor.id !== toBeRemoved.id);
+    this.watchableService.save(watchable);
   }
 }
