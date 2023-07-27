@@ -9,6 +9,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { FavoriteGenresModule } from './favorite-genres/favorite-genres.module';
 import { ProfilePictureModule } from './profile-picture/profile-picture.module';
 import { ActorModule } from './actor/actor.module';
+import { CastModule } from './cast/cast.module';
 
 
 @Module({
@@ -22,7 +23,8 @@ import { ActorModule } from './actor/actor.module';
     FavoritesModule, 
     FavoriteGenresModule, 
     ProfilePictureModule, 
-    ActorModule,
+    ActorModule, 
+    CastModule,
   ],
   controllers: [],
   providers: [],
