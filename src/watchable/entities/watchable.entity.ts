@@ -3,6 +3,7 @@ import { WatchableType } from "../enums";
 import { Genre } from "./genre.entity";
 import { Backdrop } from "./backdrop.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Actor } from "src/actor/entities/actor.entity";
 
 @Entity()
 export class Watchable {
@@ -59,6 +60,15 @@ export class Watchable {
         inverseJoinColumn: { name: 'genre', referencedColumnName: 'genre' }
     })
     genres: Genre[];
+
+    @ApiProperty({ type: () => Actor, isArray: true })
+    @ManyToMany(() => Actor)
+    @JoinTable({
+        name: 'cast',
+        joinColumn: { name: 'watchable_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'actor_id', referencedColumnName: 'id' }
+    })
+    cast: Actor[];
 
     @ApiProperty({ type: () => Backdrop, isArray: true })
     @OneToMany(() => Backdrop, (backdrop) => backdrop.watchable)

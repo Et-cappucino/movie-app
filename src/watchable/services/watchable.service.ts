@@ -13,9 +13,13 @@ export class WatchableService {
     private readonly paginationService: PaginationService
   ) {}
 
+  save(watchable: Watchable) {
+    return this.watchableRepository.save(watchable);
+  } 
+
   create(createWatchableDto: CreateWatchableDto) {
     const watchable = this.watchableRepository.create(createWatchableDto)
-    return this.watchableRepository.save(watchable);
+    return this.save(watchable);
   }
 
   async findAll(pageNumber: number, pageSize: number) {
@@ -32,7 +36,8 @@ export class WatchableService {
       where: { id },
       relations: {
         genres: true,
-        backdrops: true
+        backdrops: true,
+        cast: true
       }
     });
     
@@ -43,7 +48,7 @@ export class WatchableService {
 
   async update(id: number, updateWatchableDto: UpdateWatchableDto) {
     const watchable = await this.findOne(id)
-    return this.watchableRepository.save({ ...watchable, ...updateWatchableDto });
+    return this.save({ ...watchable, ...updateWatchableDto });
   }
 
   async remove(id: number) {
