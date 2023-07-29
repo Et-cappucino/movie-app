@@ -7,27 +7,38 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  postComment(@Body() createCommentDto: CreateCommentDto) {
+    return this.commentService.postComment(createCommentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Get('/profile-:profileId/watchable-:watchableId')
+  getProfileAllWatchableComments(@Param('profileId') profileId: number,
+                                 @Param('watchableId') watchableId: number) {
+    return this.commentService.findAllComments(profileId, watchableId);
+  }
+
+  @Get('/watchable-:watchableId')
+  getWatchableAllComments(@Param('watchableId') watchableId: number) {
+    return this.commentService.findWatchableAllComments(watchableId);
+  }
+
+  @Get('/profile-:profileId')
+  getProfileAllComments(@Param('profileId') profileId: number) {
+    return this.commentService.findProfileAllComments(profileId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.commentService.findOne(id);
+  getComment(@Param('id') id: number) {
+    return this.commentService.getComment(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(id, updateCommentDto);
+  updateComment(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
+    return this.commentService.updateComment(id, updateCommentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.commentService.remove(id);
+  removeComment(@Param('id') id: number) {
+    return this.commentService.removeComment(id);
   }
 }
