@@ -4,6 +4,7 @@ import { Genre } from "./genre.entity";
 import { Backdrop } from "./backdrop.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Actor } from "src/actor/entities/actor.entity";
+import { Comment } from "src/comment/entities/comment.entity";
 
 @Entity()
 export class Watchable {
@@ -73,4 +74,7 @@ export class Watchable {
     @ApiProperty({ type: () => Backdrop, isArray: true })
     @OneToMany(() => Backdrop, (backdrop) => backdrop.watchable)
     backdrops: Backdrop[];
+
+    @OneToMany(() => Comment, (comment) => comment.watchable)
+    comments: Comment[];
 }

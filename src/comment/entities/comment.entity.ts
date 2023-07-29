@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Profile } from "src/profile/entities/profile.entity";
+import { Watchable } from "src/watchable/entities";
 
 @Entity()
 export class Comment {
@@ -11,4 +13,12 @@ export class Comment {
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
+    
+    @ManyToOne(() => Profile, (profile) => profile.comments)
+    @JoinColumn({ name: 'profile_id' })
+    commenter: Profile;
+
+    @ManyToOne(() => Watchable, (watchable) => watchable.comments)
+    @JoinColumn({ name: 'watchable_id' })
+    watchable: Watchable;
 }
