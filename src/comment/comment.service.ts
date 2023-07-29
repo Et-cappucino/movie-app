@@ -1,34 +1,88 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCommentDto, UpdateCommentDto } from './dto'
+import { Comment } from './entities/comment.entity';
+import { ProfileService } from 'src/profile/profile.service';
+import { WatchableService } from 'src/watchable/services';
 
 @Injectable()
 export class CommentService {
+  constructor(
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
+    private readonly profileService: ProfileService,
+    private readonly watchableService: WatchableService 
+  ) {}
   
-  postComment(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  async postComment(createCommentDto: CreateCommentDto) {
+    const profile = await this.profileService.findOne(createCommentDto.commenterId);
+    const watchable = await this.watchableService.findOne(createCommentDto.watchableId);
+    
+    const comment = this.commentRepository.create(createCommentDto);
+    comment.commenter = profile
+    comment.watchable = watchable
+    
+    this.commentRepository.save(comment);
   }
 
-  findAllComments(profileId: number, watchableId: number) {
-    return `This action returns all comments from profile #${profileId} under watchable #${watchableId}`;
+  async findAllComments(profileId: number, watchableId: number) {
+    const comments = await this.commentRepository.find({
+      where: { 
+        watchable: {
+          id: watchableId
+        },
+        commenter: {
+          id: profileId
+        }
+      }
+    })
+    return comments;
   }
 
-  findWatchableAllComments(watchableId: number) {
-    return `This action returns all comments under watchable #${watchableId}`;
+  async findWatchableAllComments(watchableId: number) {
+    const comments = await this.commentRepository.find({
+      where: { 
+        watchable: {
+          id: watchableId
+        }
+      }
+    })
+    return comments;
   }
 
-  findProfileAllComments(profileId: number) {
-    return `This action returns all comments from profile #${profileId}`;
+  async findProfileAllComments(profileId: number) {
+    const comments = await this.commentRepository.find({
+      where: { 
+        commenter: {
+          id: profileId
+        } 
+      }
+    })
+    return comments;
   }
 
-  getComment(id: number) {
-    return `This action returns a #${id} comment`;
+  async getComment(id: number) {
+    const comment = await this.commentRepository.findOne({
+      where: { id },
+      relations: {
+        commenter: true,
+        watchable: true
+      }
+    })
+
+    if (!comment) throw new NotFoundException(`Comment with id: ${id} not found`)
+
+    return comment;
   }
 
-  updateComment(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async updateComment(id: number, updateCommentDto: UpdateCommentDto) {
+    const comment = await this.getComment(id);
+    this.commentRepository.save({ ...comment, ...updateCommentDto });
   }
 
-  removeComment(id: number) {
-    return `This action removes a #${id} comment`;
+  async removeComment(id: number) {
+    const comment = await this.getComment(id);
+    this.commentRepository.remove(comment);
   }
 }
