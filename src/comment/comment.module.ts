@@ -5,12 +5,14 @@ import { CommentController } from './comment.controller';
 import { Comment } from './entities/comment.entity';
 import { ProfileModule } from 'src/profile/profile.module';
 import { WatchableModule } from 'src/watchable/watchable.module';
+import { PaginationModule } from 'src/utils/pagination/pagination.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Comment]),
     ProfileModule,
-    WatchableModule
+    WatchableModule,
+    PaginationModule
   ],
   controllers: [CommentController],
   providers: [CommentService]

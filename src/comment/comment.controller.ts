@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto';
 
@@ -8,23 +8,29 @@ export class CommentController {
 
   @Post()
   postComment(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.postComment(createCommentDto);
+    this.commentService.postComment(createCommentDto);
   }
 
   @Get('/profile-:profileId/watchable-:watchableId')
-  getProfileAllWatchableComments(@Param('profileId') profileId: number,
+  getProfileAllWatchableComments(@Query('pageNumber') pageNumber: number = 0, 
+                                 @Query('pageSize') pageSize: number = 5,
+                                 @Param('profileId') profileId: number,
                                  @Param('watchableId') watchableId: number) {
-    return this.commentService.findAllComments(profileId, watchableId);
+    return this.commentService.findAllComments(profileId, watchableId, pageNumber, pageSize);
   }
 
   @Get('/watchable-:watchableId')
-  getWatchableAllComments(@Param('watchableId') watchableId: number) {
-    return this.commentService.findWatchableAllComments(watchableId);
+  getWatchableAllComments(@Query('pageNumber') pageNumber: number = 0, 
+                          @Query('pageSize') pageSize: number = 5,
+                          @Param('watchableId') watchableId: number) {
+    return this.commentService.findWatchableAllComments(watchableId, pageNumber, pageSize);
   }
 
   @Get('/profile-:profileId')
-  getProfileAllComments(@Param('profileId') profileId: number) {
-    return this.commentService.findProfileAllComments(profileId);
+  getProfileAllComments(@Query('pageNumber') pageNumber: number = 0, 
+                        @Query('pageSize') pageSize: number = 5,
+                        @Param('profileId') profileId: number) {
+    return this.commentService.findProfileAllComments(profileId, pageNumber, pageSize);
   }
 
   @Get(':id')
@@ -34,11 +40,11 @@ export class CommentController {
 
   @Put(':id')
   updateComment(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.updateComment(id, updateCommentDto);
+    this.commentService.updateComment(id, updateCommentDto);
   }
 
   @Delete(':id')
   removeComment(@Param('id') id: number) {
-    return this.commentService.removeComment(id);
+    this.commentService.removeComment(id);
   }
 }

@@ -5,6 +5,7 @@ import { CreateCommentDto, UpdateCommentDto } from './dto'
 import { Comment } from './entities/comment.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { WatchableService } from 'src/watchable/services';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class CommentService {
@@ -12,7 +13,8 @@ export class CommentService {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly profileService: ProfileService,
-    private readonly watchableService: WatchableService 
+    private readonly watchableService: WatchableService,
+    private readonly paginationService: PaginationService
   ) {}
   
   async postComment(createCommentDto: CreateCommentDto) {
@@ -26,8 +28,8 @@ export class CommentService {
     this.commentRepository.save(comment);
   }
 
-  async findAllComments(profileId: number, watchableId: number) {
-    const comments = await this.commentRepository.find({
+  async findAllComments(profileId: number, watchableId: number, pageNumber: number, pageSize: number) {
+    const [comments, count] = await this.commentRepository.findAndCount({
       where: { 
         watchable: {
           id: watchableId
@@ -35,31 +37,37 @@ export class CommentService {
         commenter: {
           id: profileId
         }
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize
     })
-    return comments;
+    return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
 
-  async findWatchableAllComments(watchableId: number) {
-    const comments = await this.commentRepository.find({
+  async findWatchableAllComments(watchableId: number, pageNumber: number, pageSize: number) {
+    const [comments, count] = await this.commentRepository.findAndCount({
       where: { 
         watchable: {
           id: watchableId
         }
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize
     })
-    return comments;
+    return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
 
-  async findProfileAllComments(profileId: number) {
-    const comments = await this.commentRepository.find({
+  async findProfileAllComments(profileId: number, pageNumber: number, pageSize: number) {
+    const [comments, count] = await this.commentRepository.findAndCount({
       where: { 
         commenter: {
           id: profileId
         } 
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize
     })
-    return comments;
+    return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
 
   async getComment(id: number) {
