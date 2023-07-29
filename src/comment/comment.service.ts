@@ -39,7 +39,10 @@ export class CommentService {
         }
       },
       skip: pageNumber * pageSize,
-      take: pageSize
+      take: pageSize,
+      order: {
+        createdAt: 'DESC'
+      },
     })
     return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
@@ -52,7 +55,10 @@ export class CommentService {
         }
       },
       skip: pageNumber * pageSize,
-      take: pageSize
+      take: pageSize,
+      order: {
+        createdAt: 'DESC'
+      },
     })
     return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
@@ -65,7 +71,10 @@ export class CommentService {
         } 
       },
       skip: pageNumber * pageSize,
-      take: pageSize
+      take: pageSize,
+      order: {
+        createdAt: 'DESC'
+      },
     })
     return this.paginationService.paginate(comments, pageNumber, pageSize, count);
   }
