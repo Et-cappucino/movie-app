@@ -38,7 +38,8 @@ export class ProfileService {
         watchlist: true,
         favorites: true,
         favoriteGenres: true,
-        profilePicture: true
+        profilePicture: true,
+        comments: true
       }
     });
     
