@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Profile } from "src/profile/entities/profile.entity";
+import { Watchable } from "src/watchable/entities";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity()
 export class Rate {
@@ -17,4 +19,12 @@ export class Rate {
 
     @CreateDateColumn({ name: 'rated_at' })
     ratedAt: Date;
+
+    @ManyToOne(() => Profile, (profile) => profile.rates, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'profile_id' })
+    profile: Profile;
+
+    @ManyToOne(() => Watchable, (watchable) => watchable.rates, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'watchable_id' })
+    watchable: Watchable;
 }

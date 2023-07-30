@@ -4,6 +4,7 @@ import { User } from "src/user/entities/user.entity";
 import { Watchable, Genre } from "src/watchable/entities";
 import { ProfilePicture } from "src/profile-picture/entities/profile-picture.entity";
 import { Comment } from "src/comment/entities/comment.entity";
+import { Rate } from "src/rate/entities/rate.entity";
 
 @Entity()
 export class Profile {
@@ -58,4 +59,7 @@ export class Profile {
 
     @OneToMany(() => Comment, (comment) => comment.commenter)
     comments: Comment[];
+
+    @OneToMany(() => Rate, (rate) => rate.profile)
+    rates: Rate[];
 }

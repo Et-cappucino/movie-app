@@ -38,7 +38,8 @@ export class WatchableService {
         genres: true,
         backdrops: true,
         cast: true,
-        comments: true
+        comments: true,
+        rates: true
       }
     });
     
