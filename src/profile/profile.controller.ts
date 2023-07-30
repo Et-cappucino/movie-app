@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto';
 import { Profile } from './entities/profile.entity';
@@ -18,13 +18,16 @@ export class ProfileController {
     return this.profileService.create(createProfileDto);
   }
 
+  @ApiQuery({ name: 'pageNumber', example: 0 })
+  @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
     type: Profile, 
     isArray: true,
     description: 'Retrieve all Profiles with pagination support.' 
   })
   @Get()
-  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
+  findAll(@Query('pageNumber') pageNumber: number = 0, 
+          @Query('pageSize') pageSize: number = 5) {
     return this.profileService.findAll(pageNumber, pageSize);
   }
 

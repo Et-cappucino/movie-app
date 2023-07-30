@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Put, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
 import { FavoriteWatchablesService } from './favorites.service';
 import { Watchable } from 'src/watchable/entities';
 
@@ -9,6 +9,8 @@ export class FavoriteWatchablesController {
 
     constructor(private readonly favoritesService: FavoriteWatchablesService) {}
 
+    @ApiQuery({ name: 'pageNumber', example: 0 })
+    @ApiQuery({ name: 'pageSize', example: 5 })
     @ApiOkResponse({ 
         type: Watchable, 
         isArray: true,

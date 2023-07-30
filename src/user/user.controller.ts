@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse, ApiQuery } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './entities/user.entity';
@@ -19,13 +19,16 @@ export class UserController {
     return this.userService.signUp(createUserDto);
   }
 
+  @ApiQuery({ name: 'pageNumber', example: 0 })
+  @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
     type: User, 
     isArray: true,
     description: 'Retrieve all Users with pagination support.' 
   })
   @Get()
-  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 5) {
+  findAll(@Query('pageNumber') pageNumber: number = 0, 
+          @Query('pageSize') pageSize: number = 5) {
     return this.userService.findAll(pageNumber, pageSize);
   }
 

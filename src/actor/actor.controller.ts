@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ActorService } from './actor.service';
 import { CreateActorDto, UpdateActorDto } from './dto';
 import { Actor } from './entities/actor.entity';
@@ -18,13 +18,16 @@ export class ActorController {
     return this.actorService.registerActor(createActorDto);
   }
 
+  @ApiQuery({ name: 'pageNumber', example: 0 })
+  @ApiQuery({ name: 'pageSize', example: 10 })
   @ApiOkResponse({ 
     type: Actor, 
     isArray: true,
     description: 'Retrieve all Actors with pagination support.' 
   })
   @Get()
-  findAll(@Query('pageNumber') pageNumber: number = 0, @Query('pageSize') pageSize: number = 10) {
+  findAll(@Query('pageNumber') pageNumber: number = 0, 
+          @Query('pageSize') pageSize: number = 10) {
     return this.actorService.findAll(pageNumber, pageSize);
   }
 
