@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Watchable } from "src/watchable/entities";
@@ -17,14 +17,18 @@ export class Comment {
     @ApiProperty()
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
+
+    @ApiProperty()
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
     
     @ApiProperty({ type: () => Profile })
-    @ManyToOne(() => Profile, (profile) => profile.comments)
+    @ManyToOne(() => Profile, (profile) => profile.comments, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'profile_id' })
     commenter: Profile;
 
     @ApiProperty({ type: () => Watchable })
-    @ManyToOne(() => Watchable, (watchable) => watchable.comments)
+    @ManyToOne(() => Watchable, (watchable) => watchable.comments, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'watchable_id' })
     watchable: Watchable;
 }
