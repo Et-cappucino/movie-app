@@ -11,6 +11,7 @@ import { ProfilePictureModule } from './profile-picture/profile-picture.module';
 import { ActorModule } from './actor/actor.module';
 import { CastModule } from './cast/cast.module';
 import { CommentModule } from './comment/comment.module';
+import { RateModule } from './rate/rate.module';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { CommentModule } from './comment/comment.module';
     ProfilePictureModule, 
     ActorModule, 
     CastModule, 
-    CommentModule,
+    CommentModule, 
+    RateModule,
   ],
   controllers: [],
   providers: [],
