@@ -5,6 +5,7 @@ import { CreateRateDto } from './dto/create-rate.dto';
 import { Rate } from './entities/rate.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { WatchableService } from 'src/watchable/services';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class RateService {
@@ -12,7 +13,8 @@ export class RateService {
     @InjectRepository(Rate)
     private readonly rateRepository: Repository<Rate>,
     private readonly profileService: ProfileService,
-    private readonly watchableService: WatchableService
+    private readonly watchableService: WatchableService,
+    private readonly pagainationService: PaginationService
   ) {}
   
   async create(createRateDto: CreateRateDto) {
@@ -30,8 +32,8 @@ export class RateService {
     }  
   }
 
-  async findAllWatchableRates(id: number) {
-    const rates = await this.rateRepository.find({
+  async findAllWatchableRates(id: number, pageNumber: number, pageSize: number) {
+    const [rates, count] = await this.rateRepository.findAndCount({
       where: {
         watchable: {
           id
@@ -39,13 +41,18 @@ export class RateService {
       },
       relations: {
         profile: true
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize,
+      order: {
+        ratedAt: 'DESC'
       }
     });
-    return rates;
+    return this.pagainationService.paginate(rates, pageNumber, pageSize, count);
   }
 
-  async findAllProfileRates(id: number) {
-    const rates = await this.rateRepository.find({
+  async findAllProfileRates(id: number, pageNumber: number, pageSize: number) {
+    const [rates, count] = await this.rateRepository.findAndCount({
       where: {
         profile: {
           id
@@ -53,9 +60,14 @@ export class RateService {
       },
       relations: {
         watchable: true
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize,
+      order: {
+        ratedAt: 'DESC'
       }
     });
-    return rates;
+    return this.pagainationService.paginate(rates, pageNumber, pageSize, count);
   }
 
   private async validateRateAttempt(createRateDto: CreateRateDto) {
