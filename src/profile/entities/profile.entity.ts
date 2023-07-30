@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 import { Watchable, Genre } from "src/watchable/entities";
 import { ProfilePicture } from "src/profile-picture/entities/profile-picture.entity";
+import { Comment } from "src/comment/entities/comment.entity";
 
 @Entity()
 export class Profile {
@@ -54,4 +55,7 @@ export class Profile {
         inverseJoinColumn: { name: 'genre', referencedColumnName: 'genre' }
     })
     favoriteGenres: Genre[];
+
+    @OneToMany(() => Comment, (comment) => comment.commenter)
+    comments: Comment[];
 }

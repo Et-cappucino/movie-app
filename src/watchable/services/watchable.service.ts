@@ -37,7 +37,8 @@ export class WatchableService {
       relations: {
         genres: true,
         backdrops: true,
-        cast: true
+        cast: true,
+        comments: true
       }
     });
     
