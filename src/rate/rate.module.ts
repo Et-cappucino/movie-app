@@ -1,9 +1,17 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { RateService } from './rate.service';
 import { RateController } from './rate.controller';
+import { Rate } from './entities/rate.entity';
+import { ProfileModule } from 'src/profile/profile.module';
+import { WatchableModule } from 'src/watchable/watchable.module';
 
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forFeature([Rate]),
+    ProfileModule,
+    WatchableModule,
+  ],
   controllers: [RateController],
   providers: [RateService]
 })

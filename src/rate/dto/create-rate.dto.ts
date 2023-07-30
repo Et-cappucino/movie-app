@@ -22,4 +22,14 @@ export class CreateRateDto {
     @IsNotEmpty()
     @IsPositive()
     questionThreeValue: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @IsPositive()
+    profileId: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @IsPositive()
+    watchableId: number;
 }
