@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSearchRecordDto } from './dto/create-search-record.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SearchRecord } from './entities/search-record.entity';
+import { Watchable } from 'src/watchable/entities';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class SearchService {
+  constructor(
+    @InjectRepository(SearchRecord)
+    private readonly searchRecordRepository: Repository<SearchRecord>,
+    
+    @InjectRepository(Watchable)
+    private readonly watchableRepository: Repository<Watchable>,
+    private readonly userService: UserService
+  ) {}
 
-  searchWatchables() {
-    return `This action returns all search`;
-  }
-
-  userSearchWatchable() {
-    return `This action returns all search`;
+  async searchWatchables(query: string, email?: string) {
+    if (email) {
+      this.createSearchRecord(query, email)
+    }
+    const searchResult = await this.findByNameStartingWith(query);
+    return searchResult  
   }
 
   searchWatchableByGenre() {
@@ -36,7 +48,21 @@ export class SearchService {
     return `This action returns all search`;
   }
 
-  private create(createSearchRecordDto: CreateSearchRecordDto) {
-    return 'This action adds a new search';
+  private async createSearchRecord(query: string, email: string) {
+    const user = await this.userService.findByEmail(email);
+
+    const searchRecord = this.searchRecordRepository.create();
+    searchRecord.text = query
+    searchRecord.profile = user.profile
+
+    this.searchRecordRepository.save(searchRecord)
+  }
+
+  private async findByNameStartingWith(title: string) {
+    const watchables = await this.watchableRepository.createQueryBuilder('watchable')
+    .where('watchable.name LIKE :title', { title: `${title}%` })
+    .getMany();
+    
+    return watchables
   }
 }

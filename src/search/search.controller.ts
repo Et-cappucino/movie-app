@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { SearchService } from './search.service';
 
 @Controller('api/search')
@@ -6,41 +6,42 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  searchWatchables() {
-    return this.searchService.searchWatchables();
+  searchWatchables(@Query('query') query: string) {
+    return this.searchService.searchWatchables(query);
   }
 
-  @Get()
-  userSearchWatchable() {
-    return this.searchService.userSearchWatchable();
+  @Get('userSearch')
+  userSearchWatchable(@Query('query') query: string,
+                      @Query('email') email: string) {
+    return this.searchService.searchWatchables(query, email);
   }
 
-  @Get()
+  @Get('genre')
   searchWatchableByGenre() {
     return this.searchService.searchWatchableByGenre();
   }
 
-  @Get()
+  @Get('releaseYear')
   searchWatchableByReleaseYear() {
     return this.searchService.searchWatchableByReleaseYear();
   }
 
-  @Get()
+  @Get('movie/genre')
   searchMovieByGenre() {
     return this.searchService.searchMovieByGenre();
   }
 
-  @Get()
+  @Get('series/genre')
   searchSeriesByGenre() {
     return this.searchService.searchSeriesByGenre();
   }
 
-  @Get()
+  @Get('movie/releaseYear')
   searchMovieByReleaseYear() {
     return this.searchService.searchMovieByReleaseYear();
   }
 
-  @Get()
+  @Get('series/releaseYear')
   searchSeriesByReleaseYear() {
     return this.searchService.searchSeriesByReleaseYear();
   }
