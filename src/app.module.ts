@@ -12,6 +12,7 @@ import { ActorModule } from './actor/actor.module';
 import { CastModule } from './cast/cast.module';
 import { CommentModule } from './comment/comment.module';
 import { RateModule } from './rate/rate.module';
+import { SearchModule } from './search/search.module';
 
 
 @Module({
@@ -28,7 +29,8 @@ import { RateModule } from './rate/rate.module';
     ActorModule, 
     CastModule, 
     CommentModule, 
-    RateModule,
+    RateModule, 
+    SearchModule,
   ],
   controllers: [],
   providers: [],
