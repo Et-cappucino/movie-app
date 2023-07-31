@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { SearchService } from './search.service';
+import { GenreEnum, WatchableType } from 'src/watchable/enums';
 
 @Controller('api/search')
 export class SearchController {
@@ -11,38 +12,20 @@ export class SearchController {
   }
 
   @Get('userSearch')
-  userSearchWatchable(@Query('query') query: string,
-                      @Query('email') email: string) {
+  userSearchWatchables(@Query('query') query: string,
+                       @Query('email') email: string) {
     return this.searchService.searchWatchables(query, email);
   }
 
-  @Get('genre')
-  searchWatchableByGenre() {
-    return this.searchService.searchWatchableByGenre();
+  @Get('type-genre')
+  searchWatchablesByTypeAndGenre(@Query('genre') genre: GenreEnum,
+                                 @Query('type') type: WatchableType) {
+    return this.searchService.findByTypeAndGenre(genre, type);
   }
 
-  @Get('releaseYear')
-  searchWatchableByReleaseYear() {
-    return this.searchService.searchWatchableByReleaseYear();
-  }
-
-  @Get('movie/genre')
-  searchMovieByGenre() {
-    return this.searchService.searchMovieByGenre();
-  }
-
-  @Get('series/genre')
-  searchSeriesByGenre() {
-    return this.searchService.searchSeriesByGenre();
-  }
-
-  @Get('movie/releaseYear')
-  searchMovieByReleaseYear() {
-    return this.searchService.searchMovieByReleaseYear();
-  }
-
-  @Get('series/releaseYear')
-  searchSeriesByReleaseYear() {
-    return this.searchService.searchSeriesByReleaseYear();
+  @Get('type-releaseYear')
+  searchWatchablesByTypeAndReleaseYear(@Query('year') year: number,
+                                       @Query('type') type: WatchableType) {
+    return this.searchService.findByTypeAndReleaseYear(year, type);
   }
 }

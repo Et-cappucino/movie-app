@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { SearchRecord } from './entities/search-record.entity';
-import { Watchable } from 'src/watchable/entities';
+import { Genre, Watchable } from 'src/watchable/entities';
 import { UserService } from 'src/user/user.service';
+import { GenreEnum, WatchableType } from 'src/watchable/enums';
 
 @Injectable()
 export class SearchService {
@@ -24,28 +25,32 @@ export class SearchService {
     return searchResult  
   }
 
-  searchWatchableByGenre() {
-    return `This action returns all search`;
+  async findByTypeAndGenre(genre: GenreEnum, watchableType?: WatchableType) {
+    const genreEntity = new Genre();
+    genreEntity.genre = genre
+
+    const watchables = await this.watchableRepository.find({
+      where: {
+        type: watchableType ? watchableType : null,
+        genres: genreEntity
+      }
+    })
+
+    return watchables
   }
 
-  searchWatchableByReleaseYear() {
-    return `This action returns all search`;
-  }
+  async findByTypeAndReleaseYear(releaseYear: number, watchableType?: WatchableType) {
+    const watchables = await this.watchableRepository.find({
+      where: {
+        type: watchableType ? watchableType : null,
+        releaseDate: Raw((alias) => `${alias} > :startDate && ${alias} < :endDate`, { 
+          startDate: new Date(`${releaseYear}-01-01`),
+          endDate: new Date(`${releaseYear + 1}-01-01`),
+        })
+      }
+    });
 
-  searchMovieByGenre() {
-    return `This action returns all search`;
-  }
-
-  searchSeriesByGenre() {
-    return `This action returns all search`;
-  }
-
-  searchMovieByReleaseYear() {
-    return `This action returns all search`;
-  }
-
-  searchSeriesByReleaseYear() {
-    return `This action returns all search`;
+    return watchables;
   }
 
   private async createSearchRecord(query: string, email: string) {
@@ -59,7 +64,8 @@ export class SearchService {
   }
 
   private async findByNameStartingWith(title: string) {
-    const watchables = await this.watchableRepository.createQueryBuilder('watchable')
+    const watchables = await this.watchableRepository
+    .createQueryBuilder('watchable')
     .where('watchable.name LIKE :title', { title: `${title}%` })
     .getMany();
     
