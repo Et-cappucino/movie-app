@@ -40,7 +40,8 @@ export class ProfileService {
         favoriteGenres: true,
         profilePicture: true,
         comments: true,
-        rates: true
+        rates: true,
+        searches: true
       }
     });
     

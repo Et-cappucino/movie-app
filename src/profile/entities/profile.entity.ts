@@ -5,6 +5,7 @@ import { Watchable, Genre } from "src/watchable/entities";
 import { ProfilePicture } from "src/profile-picture/entities/profile-picture.entity";
 import { Comment } from "src/comment/entities/comment.entity";
 import { Rate } from "src/rate/entities/rate.entity";
+import { SearchRecord } from "src/search/entities/search-record.entity";
 
 @Entity()
 export class Profile {
@@ -62,4 +63,7 @@ export class Profile {
 
     @OneToMany(() => Rate, (rate) => rate.profile)
     rates: Rate[];
+
+    @OneToMany(() => SearchRecord, (search) => search.profile)
+    searches: SearchRecord[];
 }
