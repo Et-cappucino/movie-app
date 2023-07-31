@@ -5,6 +5,7 @@ import { Backdrop } from "./backdrop.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Actor } from "src/actor/entities/actor.entity";
 import { Comment } from "src/comment/entities/comment.entity";
+import { Rate } from "src/rate/entities/rate.entity";
 
 @Entity()
 export class Watchable {
@@ -77,4 +78,7 @@ export class Watchable {
 
     @OneToMany(() => Comment, (comment) => comment.watchable)
     comments: Comment[];
+
+    @OneToMany(() => Rate, (rate) => rate.watchable)
+    rates: Rate[];
 }
