@@ -5,6 +5,7 @@ import { SearchRecord } from './entities/search-record.entity';
 import { Genre, Watchable } from 'src/watchable/entities';
 import { UserService } from 'src/user/user.service';
 import { GenreEnum, WatchableType } from 'src/watchable/enums';
+import { PaginationService } from 'src/utils/pagination/pagaination.service';
 
 @Injectable()
 export class SearchService {
@@ -14,43 +15,54 @@ export class SearchService {
     
     @InjectRepository(Watchable)
     private readonly watchableRepository: Repository<Watchable>,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly paginationService: PaginationService
   ) {}
 
-  async searchWatchables(query: string, email?: string) {
+  async searchWatchables(query: string, pageNumber: number, pageSize: number, email?: string) {
     if (email) {
       this.createSearchRecord(query, email)
     }
     const searchResult = await this.findByNameStartingWith(query);
-    return searchResult  
+    return this.paginationService.paginate(searchResult, pageNumber, pageSize); 
   }
 
-  async findByTypeAndGenre(genre: GenreEnum, watchableType?: WatchableType) {
+  async findByTypeAndGenre(genre: GenreEnum, pageNumber: number, pageSize: number, watchableType?: WatchableType) {
     const genreEntity = new Genre();
     genreEntity.genre = genre
 
-    const watchables = await this.watchableRepository.find({
+    const [watchables, count] = await this.watchableRepository.findAndCount({
       where: {
         type: watchableType ? watchableType : null,
         genres: genreEntity
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize,
+      order: {
+        rating: 'DESC'
+      },
     })
 
-    return watchables
+    return this.paginationService.paginate(watchables, pageNumber, pageSize, count);
   }
 
-  async findByTypeAndReleaseYear(releaseYear: number, watchableType?: WatchableType) {
-    const watchables = await this.watchableRepository.find({
+  async findByTypeAndReleaseYear(releaseYear: number, pageNumber: number, pageSize: number, watchableType?: WatchableType) {
+    const [watchables, count] = await this.watchableRepository.findAndCount({
       where: {
         type: watchableType ? watchableType : null,
         releaseDate: Raw((alias) => `${alias} > :startDate && ${alias} < :endDate`, { 
           startDate: new Date(`${releaseYear}-01-01`),
           endDate: new Date(`${releaseYear + 1}-01-01`),
         })
-      }
+      },
+      skip: pageNumber * pageSize,
+      take: pageSize,
+      order: {
+        releaseDate: 'DESC'
+      },
     });
 
-    return watchables;
+    return this.paginationService.paginate(watchables, pageNumber, pageSize, count);
   }
 
   private async createSearchRecord(query: string, email: string) {
@@ -67,6 +79,7 @@ export class SearchService {
     const watchables = await this.watchableRepository
     .createQueryBuilder('watchable')
     .where('watchable.name LIKE :title', { title: `${title}%` })
+    .orderBy('watchable.rating', 'DESC')
     .getMany();
     
     return watchables
