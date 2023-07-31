@@ -64,6 +64,19 @@ export class UserService {
     return this.userRepository.remove(user);
   }
 
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: { 
+        profile: true
+      }
+    })
+    
+    if (!user) throw new NotFoundException(`User with id: ${email} not found`)
+
+    return user;
+  }
+
   private async validateEmailUnique(email: string, id?: number) {
     const existingUser = await this.userRepository.findOne({
       where: { email }
