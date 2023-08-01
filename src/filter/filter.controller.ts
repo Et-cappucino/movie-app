@@ -7,22 +7,30 @@ export class FilterController {
   constructor(private readonly filterService: FilterService) {}
 
   @Get()
-  findAllWatchablesByType(@Query('type') type: WatchableType) {
-    return this.filterService.findAllWatchablesByType(type);
+  findAllWatchablesByType(@Query('pageNumber') pageNumber: number = 0, 
+                          @Query('pageSize') pageSize: number = 10,
+                          @Query('type') type: WatchableType) {
+    return this.filterService.findAllWatchablesByType(pageNumber, pageSize, type);
   }
 
   @Get('latest')
-  findLatest(@Query('type') type: WatchableType) {
-    return this.filterService.findLatest(type);
+  findLatest(@Query('pageNumber') pageNumber: number = 0, 
+             @Query('pageSize') pageSize: number = 10,
+             @Query('type') type: WatchableType) {
+    return this.filterService.findLatest(pageNumber, pageSize, type);
   }
 
   @Get('popular')
-  findPopular(@Query('type') type: WatchableType) {
-    return this.filterService.findPopular(type);
+  findPopular(@Query('pageNumber') pageNumber: number = 0, 
+              @Query('pageSize') pageSize: number = 10,
+              @Query('type') type: WatchableType) {
+    return this.filterService.findPopular(pageNumber, pageSize, type);
   }
 
   @Get('upcoming')
-  findUpcoming(@Query('type') type: WatchableType) {
-    return this.filterService.findUpcoming(type);
+  findUpcoming(@Query('pageNumber') pageNumber: number = 0, 
+               @Query('pageSize') pageSize: number = 10,
+               @Query('type') type: WatchableType) {
+    return this.filterService.findUpcoming(pageNumber, pageSize, type);
   }
 }
