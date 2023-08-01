@@ -13,6 +13,7 @@ import { PaginationModule } from 'src/utils/pagination/pagination.module';
     PaginationModule
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
+  exports: [UserService]
 })
 export class UserModule {}
