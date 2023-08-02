@@ -13,6 +13,7 @@ import { CastModule } from './cast/cast.module';
 import { CommentModule } from './comment/comment.module';
 import { RateModule } from './rate/rate.module';
 import { SearchModule } from './search/search.module';
+import { FilterModule } from './filter/filter.module';
 
 
 @Module({
@@ -30,7 +31,8 @@ import { SearchModule } from './search/search.module';
     CastModule, 
     CommentModule, 
     RateModule, 
-    SearchModule,
+    SearchModule, 
+    FilterModule,
   ],
   controllers: [],
   providers: [],
