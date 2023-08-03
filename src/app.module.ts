@@ -14,6 +14,7 @@ import { CommentModule } from './comment/comment.module';
 import { RateModule } from './rate/rate.module';
 import { SearchModule } from './search/search.module';
 import { FilterModule } from './filter/filter.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { FilterModule } from './filter/filter.module';
     CommentModule, 
     RateModule, 
     SearchModule, 
-    FilterModule,
+    FilterModule, 
+    AuthModule,
   ],
   controllers: [],
   providers: [],
