@@ -21,7 +21,7 @@ export class UserService {
     await this.validateEmailUnique(createUserDto.email);
 
     const profile = await this.profileService.create(new Profile())
-    createUserDto.password = await Bcrypt.hash(createUserDto.password, 10);
+    createUserDto.password = await this.encrypt(createUserDto.password);
     
     const user = this.userRepository.create(createUserDto)
     user.profile = profile
@@ -87,4 +87,6 @@ export class UserService {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
   }
+
+  private encrypt = (password: string) => Bcrypt.hash(password, 10);
 }
