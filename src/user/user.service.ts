@@ -16,7 +16,7 @@ export class UserService {
     private readonly pagainationService: PaginationService
   ) {}
   
-  async signUp(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     await this.validateEmailUnique(createUserDto.email);
 
     const profile = await this.profileService.create(new Profile())

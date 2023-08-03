@@ -15,8 +15,8 @@ export class UserController {
   })
   @ApiConflictResponse({ description: 'User with provided email already exists' })
   @Post()
-  signUp(@Body() createUserDto: CreateUserDto) {
-    return this.userService.signUp(createUserDto);
+  registerUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
