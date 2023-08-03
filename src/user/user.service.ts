@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as Bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
@@ -20,6 +21,7 @@ export class UserService {
     await this.validateEmailUnique(createUserDto.email);
 
     const profile = await this.profileService.create(new Profile())
+    createUserDto.password = await Bcrypt.hash(createUserDto.password, 10);
     
     const user = this.userRepository.create(createUserDto)
     user.profile = profile
