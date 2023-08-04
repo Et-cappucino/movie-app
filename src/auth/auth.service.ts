@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as Bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
 import { JwtPayload, Tokens } from './types';
@@ -21,8 +22,18 @@ export class AuthService {
         return tokens
     }
 
-    signIn() {
-        return 'Signed In';
+    async signIn(createUserDto: CreateUserDto): Promise<Tokens> {
+        const user = await this.userService.findByEmail(createUserDto.email);
+        
+        if (!user) throw new ForbiddenException('Access Denied');
+
+        const passwordMatches = await Bcrypt.compare(createUserDto.password, user.password);
+        if (!passwordMatches) throw new ForbiddenException('Access Denied');
+
+        const payload = this.getJwtPayload(user.id, user.email)
+        const tokens = await this.getTokens(payload);
+        
+        return tokens
     }
 
     private async getTokens(payload: JwtPayload): Promise<Tokens> {
