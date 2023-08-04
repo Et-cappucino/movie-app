@@ -80,6 +80,15 @@ export class UserService {
     return user;
   }
 
+  async updateHashedRefreshToken(id: number, token: string) {
+    const user = await this.findOne(id);
+    
+    await this.userRepository.save({
+      ...user,
+      hashedRefreshToken: token ? await this.encrypt(token) : null
+    })
+  }
+
   private async validateEmailUnique(email: string, id?: number) {
     const existingUser = await this.userRepository.findOne({
       where: { email }

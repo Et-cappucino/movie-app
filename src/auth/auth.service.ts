@@ -23,6 +23,8 @@ export class AuthService {
         const payload = this.getJwtPayload(user.id, user.email)
         const tokens = await this.getTokens(payload);
         
+        await this.userService.updateHashedRefreshToken(user.id, tokens.refresh_token);
+
         return tokens
     }
 
@@ -36,6 +38,8 @@ export class AuthService {
 
         const payload = this.getJwtPayload(user.id, user.email)
         const tokens = await this.getTokens(payload);
+        
+        await this.userService.updateHashedRefreshToken(user.id, tokens.refresh_token);
         
         return tokens
     }
