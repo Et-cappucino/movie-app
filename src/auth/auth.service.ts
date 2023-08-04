@@ -44,6 +44,10 @@ export class AuthService {
         return tokens
     }
 
+    async logOut(userId: number) {
+        await this.userService.updateHashedRefreshToken(userId, null);
+    }
+
     private async getTokens(payload: JwtPayload): Promise<Tokens> {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {
