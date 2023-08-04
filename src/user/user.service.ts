@@ -56,6 +56,7 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.validateEmailUnique(updateUserDto.email, id);
+    updateUserDto.password = await this.encrypt(updateUserDto.password);
     
     const user = await this.findOne(id)
     return this.userRepository.save({ ...user, ...updateUserDto });
