@@ -48,6 +48,22 @@ export class AuthService {
         await this.userService.updateHashedRefreshToken(userId, null);
     }
 
+    async refreshTokens(userId: number, refreshToken: string): Promise<Tokens> {
+        const user = await this.userService.findOne(userId);
+
+        if (!user || !user.hashedRefreshToken) throw new ForbiddenException('Access Denied');
+      
+        const rtMatches = await Bcrypt.compare(refreshToken, user.hashedRefreshToken);
+        if (!rtMatches) throw new ForbiddenException('Access Denied');
+
+        const payload = this.getJwtPayload(user.id, user.email);
+        const tokens = await this.getTokens(payload);
+
+        await this.userService.updateHashedRefreshToken(user.id, tokens.refresh_token);
+    
+        return tokens
+    }
+
     private async getTokens(payload: JwtPayload): Promise<Tokens> {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {

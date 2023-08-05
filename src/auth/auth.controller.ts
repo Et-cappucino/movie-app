@@ -2,8 +2,8 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Tokens } from './types';
 import { AuthDto } from './dto/auth.dto';
-import { GetCurrentUserId } from 'src/common/decorators';
-import { AccessTokenGuard } from 'src/common/guards';
+import { GetCurrentUserId, GetCurrentUserRefreshToken } from 'src/common/decorators';
+import { AccessTokenGuard, RefreshTokenGuard } from 'src/common/guards';
 
 @Controller('api/auth')
 export class AuthController {
@@ -23,6 +23,13 @@ export class AuthController {
     @Post('logout')
     logOut(@GetCurrentUserId() userId: number) {
         this.authService.logOut(userId);
+    }
+
+    @UseGuards(RefreshTokenGuard)
+    @Post('refresh')
+    refresh(@GetCurrentUserId() userId: number, 
+            @GetCurrentUserRefreshToken() refreshToken: string): Promise<Tokens> {
+        return this.authService.refreshTokens(userId, refreshToken);
     }
 }
  
