@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './db/database.module';
 import { ProfileModule } from './profile/profile.module';
 import { UserModule } from './user/user.module';
@@ -15,6 +16,7 @@ import { RateModule } from './rate/rate.module';
 import { SearchModule } from './search/search.module';
 import { FilterModule } from './filter/filter.module';
 import { AuthModule } from './auth/auth.module';
+import { AccessTokenGuard } from './common/guards';
 
 
 @Module({
@@ -37,6 +39,11 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard
+    }
+  ],
 })
 export class AppModule {}
