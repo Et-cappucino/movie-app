@@ -1,14 +1,16 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 import { Watchable } from './entities';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Watchable-Controller')
 @Controller('api/watchables')
 export class WatchableController {
   constructor(private readonly watchableService: WatchableService) {}
 
+  @ApiBearerAuth()
   @ApiCreatedResponse({ 
     type: Watchable, 
     description: 'The watchable has been successfully created.' 
@@ -18,6 +20,7 @@ export class WatchableController {
     return this.watchableService.create(createWatchableDto);
   }
 
+  @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -31,6 +34,7 @@ export class WatchableController {
     return this.watchableService.findAll(pageNumber, pageSize);
   }
 
+  @Public()
   @ApiOkResponse({ type: Watchable })
   @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
   @Get(':id')
@@ -38,6 +42,7 @@ export class WatchableController {
     return this.watchableService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({ type: Watchable })
   @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
   @Put(':id')
@@ -45,6 +50,7 @@ export class WatchableController {
     return this.watchableService.update(id, updateWatchableDto);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({ type: Watchable })
   @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
   @Delete(':id')

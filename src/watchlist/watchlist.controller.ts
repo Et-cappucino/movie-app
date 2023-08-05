@@ -1,9 +1,10 @@
 import { Controller, Param, Get, Delete, Put, Query } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { WatchlistService } from './watchlist.service';
 import { Watchable } from 'src/watchable/entities';
 
 @ApiTags('Watchlist-Controller')
+@ApiBearerAuth()
 @Controller('api/watchlist')
 export class WatchlistController {
     constructor(private readonly watchlistService: WatchlistService) {}

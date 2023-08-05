@@ -1,10 +1,11 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RateService } from './rate.service';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { Rate } from './entities/rate.entity';
 
 @ApiTags('Rate-Controller')
+@ApiBearerAuth()
 @Controller('api/rates')
 export class RateController {
   constructor(private readonly rateService: RateService) {}

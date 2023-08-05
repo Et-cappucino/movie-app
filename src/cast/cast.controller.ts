@@ -1,13 +1,15 @@
 import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CastService } from './cast.service';
 import { Actor } from 'src/actor/entities/actor.entity';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Cast-Controller')
 @Controller('api/cast')
 export class CastController {
   constructor(private readonly castService: CastService) {}
 
+  @Public()
   @ApiOkResponse({ 
     type: Actor, 
     isArray: true,
@@ -19,6 +21,7 @@ export class CastController {
     return this.castService.getWatchableCast(watchableId);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Watchable or actor with provided ids could not be found' })
   @Post(':watchableId/:actorId')
@@ -27,6 +30,7 @@ export class CastController {
     return this.castService.addToCast(watchableId, actorId);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Watchable or actor with provided ids could not be found' })
   @Delete(':watchableId/:actorId')

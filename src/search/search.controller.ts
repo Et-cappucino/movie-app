@@ -1,14 +1,16 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { GenreEnum, WatchableType } from 'src/watchable/enums';
 import { Watchable } from 'src/watchable/entities';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Search-Controller')
 @Controller('api/search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
+  @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -23,6 +25,7 @@ export class SearchController {
     return this.searchService.searchWatchables(query, pageNumber, pageSize);
   }
 
+  @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -38,6 +41,7 @@ export class SearchController {
     return this.searchService.searchWatchables(query, pageNumber, pageSize, email);
   }
 
+  @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiQuery({ name: 'genre', enum: GenreEnum })
@@ -55,6 +59,7 @@ export class SearchController {
     return this.searchService.findByTypeAndGenre(genre, pageNumber, pageSize, type);
   }
 
+  @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiQuery({ name: 'type', enum: WatchableType, required: false })

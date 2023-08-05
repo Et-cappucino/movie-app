@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfilePictureService } from './profile-picture.service';
 import { ProfilePicture } from './entities/profile-picture.entity';
 
 @ApiTags('Profile-Picture-Controller')
+@ApiBearerAuth()
 @Controller('api/images')
 export class ProfilePictureController {
   constructor(private readonly profilePictureService: ProfilePictureService) {}

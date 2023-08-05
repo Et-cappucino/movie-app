@@ -1,9 +1,10 @@
 import { Controller, Get, Param, Put, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { FavoriteWatchablesService } from './favorites.service';
 import { Watchable } from 'src/watchable/entities';
 
 @ApiTags('Favorite-Watchables-Controller')
+@ApiBearerAuth()
 @Controller('api/favorites')
 export class FavoriteWatchablesController {
 

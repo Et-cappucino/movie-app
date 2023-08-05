@@ -1,14 +1,16 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto';
 import { Comment } from './entities/comment.entity';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Comment-Controller')
 @Controller('api/comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @ApiBearerAuth()
   @ApiCreatedResponse({ 
     type: Comment, 
     description: 'The comment has been successfully created.' 
@@ -18,6 +20,7 @@ export class CommentController {
     this.commentService.postComment(createCommentDto);
   }
 
+  @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -33,6 +36,7 @@ export class CommentController {
     return this.commentService.findAllComments(profileId, watchableId, pageNumber, pageSize);
   }
 
+  @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -47,6 +51,7 @@ export class CommentController {
     return this.commentService.findWatchableAllComments(watchableId, pageNumber, pageSize);
   }
 
+  @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
   @ApiOkResponse({ 
@@ -61,6 +66,7 @@ export class CommentController {
     return this.commentService.findProfileAllComments(profileId, pageNumber, pageSize);
   }
 
+  @Public()
   @ApiOkResponse({ type: Comment })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
   @Get(':id')
@@ -68,6 +74,7 @@ export class CommentController {
     return this.commentService.getComment(id);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({ type: Comment })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
   @Put(':id')
@@ -75,6 +82,7 @@ export class CommentController {
     this.commentService.updateComment(id, updateCommentDto);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({ type: Comment })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
   @Delete(':id')
