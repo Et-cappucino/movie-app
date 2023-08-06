@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { GenreEnum, WatchableType } from 'src/watchable/enums';
 import { Watchable } from 'src/watchable/entities';
@@ -28,6 +28,7 @@ export class SearchController {
   @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to search watchables.' })
   @ApiOkResponse({ 
     type: Watchable, 
     isArray: true,

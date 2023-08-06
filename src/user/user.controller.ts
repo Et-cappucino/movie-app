@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './entities/user.entity';
@@ -14,7 +14,8 @@ export class UserController {
     type: User,
     description: 'The user has been successfully created.' 
   })
-  @ApiConflictResponse({ description: 'User with provided email already exists' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to register a user.' })
+  @ApiConflictResponse({ description: 'User with provided email already exists.' })
   @Post()
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
@@ -22,6 +23,7 @@ export class UserController {
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all users.' })
   @ApiOkResponse({ 
     type: User, 
     isArray: true,
@@ -33,23 +35,35 @@ export class UserController {
     return this.userService.findAll(pageNumber, pageSize);
   }
 
-  @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse({ description: 'User with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: User, 
+    description: 'User has been successfully found.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get a user.' })
+  @ApiNotFoundResponse({ description: 'User with provided id could not be found.' })
   @Get(':id')
   findUser(@Param('id') id: number) {
     return this.userService.findOne(id);
   }
 
-  @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse({ description: 'User with provided id could not be found' })
-  @ApiConflictResponse({ description: 'User with provided email already exists' })
+  @ApiOkResponse({ 
+    type: User, 
+    description: 'User has been successfully updated.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to update a user.' })
+  @ApiNotFoundResponse({ description: 'User with provided id could not be found.' })
+  @ApiConflictResponse({ description: 'User with provided email already exists.' })
   @Put(':id')
   updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
-  @ApiOkResponse({ type: User })
-  @ApiNotFoundResponse({ description: 'User with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: User, 
+    description: 'User has been successfully deleted.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to delete a user.' })
+  @ApiNotFoundResponse({ description: 'User with provided id could not be found.' })
   @Delete(':id')
   removeUser(@Param('id') id: number) {
     return this.userService.remove(id);

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 import { Watchable } from './entities';
@@ -11,6 +11,7 @@ export class WatchableController {
   constructor(private readonly watchableService: WatchableService) {}
 
   @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to create watchable.' })
   @ApiCreatedResponse({ 
     type: Watchable, 
     description: 'The watchable has been successfully created.' 
@@ -35,24 +36,35 @@ export class WatchableController {
   }
 
   @Public()
-  @ApiOkResponse({ type: Watchable })
-  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Watchable, 
+    description: 'Watchable has been successfully found.' 
+  })
+  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found.' })
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.watchableService.findOne(id);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Watchable })
-  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Watchable, 
+    description: 'Watchable has been successfully updated.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to update watchable.' })
+  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found.' })
   @Put(':id')
   update(@Param('id') id: number, @Body() updateWatchableDto: UpdateWatchableDto) {
     return this.watchableService.update(id, updateWatchableDto);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Watchable })
-  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Watchable, 
+    description: 'Watchable has been successfully deleted.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to delete watchable.' })
+  @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found.' })
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.watchableService.remove(id);

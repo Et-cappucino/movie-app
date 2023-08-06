@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto';
 import { Comment } from './entities/comment.entity';
@@ -15,6 +15,7 @@ export class CommentController {
     type: Comment, 
     description: 'The comment has been successfully created.' 
   })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to post a comment.' })
   @Post()
   postComment(@Body() createCommentDto: CreateCommentDto) {
     this.commentService.postComment(createCommentDto);
@@ -23,6 +24,7 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all comments from a particular Profile under a particular Watchable.' })
   @ApiOkResponse({ 
     type: Comment, 
     isArray: true,
@@ -39,6 +41,7 @@ export class CommentController {
   @Public()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all comments under a particular Watchable.' })
   @ApiOkResponse({ 
     type: Comment, 
     isArray: true,
@@ -54,6 +57,7 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all comments from a particular Profile.' })
   @ApiOkResponse({ 
     type: Comment, 
     isArray: true,
@@ -67,24 +71,35 @@ export class CommentController {
   }
 
   @Public()
-  @ApiOkResponse({ type: Comment })
-  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Comment,
+    description: 'Comment has been successfully found.' 
+  })
+  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Get(':id')
   getComment(@Param('id') id: number) {
     return this.commentService.getComment(id);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Comment })
-  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Comment,
+    description: 'Comment has been successfully updated.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to edit a comment.' })
+  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Put(':id')
   updateComment(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
     this.commentService.updateComment(id, updateCommentDto);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: Comment })
-  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Comment,
+    description: 'Comment has been successfully deleted.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to delete a comment.' })
+  @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Delete(':id')
   removeComment(@Param('id') id: number) {
     this.commentService.removeComment(id);
