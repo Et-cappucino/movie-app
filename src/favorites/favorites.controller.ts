@@ -1,9 +1,10 @@
 import { Controller, Get, Param, Put, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { FavoriteWatchablesService } from './favorites.service';
 import { Watchable } from 'src/watchable/entities';
 
 @ApiTags('Favorite-Watchables-Controller')
+@ApiBearerAuth()
 @Controller('api/favorites')
 export class FavoriteWatchablesController {
 
@@ -16,7 +17,8 @@ export class FavoriteWatchablesController {
         isArray: true,
         description: 'Retrieve the favorites of the User with pagination support.' 
     })
-    @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
+    @ApiUnauthorizedResponse({ description: 'Unauthorized to get a favorites list.' })
+    @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
     @Get(':profileId')
     getProfileFavorites(@Param('profileId') profileId: number,
                         @Query('pageNumber') pageNumber: number = 0, 
@@ -24,16 +26,18 @@ export class FavoriteWatchablesController {
         return this.favoritesService.getProfileFavorites(profileId, pageNumber, pageSize);
     }
   
-    @ApiOkResponse()
-    @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found' })
+    @ApiOkResponse({ description: 'Watchable has been successfully addded to a favorites list.' })
+    @ApiUnauthorizedResponse({ description: 'Unauthorized to add watchable to a favorites list.' })
+    @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Put(':profileId/:watchableId')
     addToFavorites(@Param('profileId') profileId: number,
                    @Param('watchableId') watchableId: number) {
         this.favoritesService.addToFavorites(profileId, watchableId);
     }
   
-    @ApiOkResponse()
-    @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found' })
+    @ApiOkResponse({ description: 'Watchable has been successfully removed from a favorites list.' })
+    @ApiUnauthorizedResponse({ description: 'Unauthorized to remove watchable from a favorites list.' })
+    @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Delete(':profileId/:watchableId')
     removeFromFavorites(@Param('profileId') profileId: number,
                         @Param('watchableId') watchableId: number) {

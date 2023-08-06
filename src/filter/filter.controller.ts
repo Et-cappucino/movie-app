@@ -3,7 +3,9 @@ import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FilterService } from './filter.service';
 import { WatchableType } from 'src/watchable/enums';
 import { Watchable } from 'src/watchable/entities';
+import { Public } from 'src/common/decorators';
 
+@Public()
 @ApiTags('Filter-Controller')
 @Controller('api/filter')
 export class FilterController {

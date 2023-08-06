@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as Bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
@@ -16,10 +17,11 @@ export class UserService {
     private readonly pagainationService: PaginationService
   ) {}
   
-  async signUp(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     await this.validateEmailUnique(createUserDto.email);
 
     const profile = await this.profileService.create(new Profile())
+    createUserDto.password = await this.encrypt(createUserDto.password);
     
     const user = this.userRepository.create(createUserDto)
     user.profile = profile
@@ -54,6 +56,7 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.validateEmailUnique(updateUserDto.email, id);
+    updateUserDto.password = await this.encrypt(updateUserDto.password);
     
     const user = await this.findOne(id)
     return this.userRepository.save({ ...user, ...updateUserDto });
@@ -72,9 +75,18 @@ export class UserService {
       }
     })
     
-    if (!user) throw new NotFoundException(`User with id: ${email} not found`)
+    if (!user) throw new NotFoundException(`User with email: ${email} not found`)
 
     return user;
+  }
+
+  async updateHashedRefreshToken(id: number, token: string) {
+    const user = await this.findOne(id);
+    
+    await this.userRepository.save({
+      ...user,
+      hashedRefreshToken: token ? await this.encrypt(token) : null
+    })
   }
 
   private async validateEmailUnique(email: string, id?: number) {
@@ -85,4 +97,6 @@ export class UserService {
       throw new ConflictException(`User with email: ${email} already exists`);
     }
   }
+
+  private encrypt = (password: string) => Bcrypt.hash(password, 10);
 }

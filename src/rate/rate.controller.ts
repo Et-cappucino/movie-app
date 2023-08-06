@@ -1,10 +1,11 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { RateService } from './rate.service';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { Rate } from './entities/rate.entity';
 
 @ApiTags('Rate-Controller')
+@ApiBearerAuth()
 @Controller('api/rates')
 export class RateController {
   constructor(private readonly rateService: RateService) {}
@@ -13,6 +14,7 @@ export class RateController {
     type: Rate, 
     description: 'The rate has been successfully created.' 
   })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to rate a watchable.' })
   @Post()
   rateWatchable(@Body() createRateDto: CreateRateDto) {
     this.rateService.create(createRateDto);
@@ -20,6 +22,7 @@ export class RateController {
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 10 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all rates of a watchable.' })
   @ApiOkResponse({ 
     type: Rate, 
     isArray: true,
@@ -34,6 +37,7 @@ export class RateController {
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 10 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all rates of a profile.' })
   @ApiOkResponse({ 
     type: Rate, 
     isArray: true,

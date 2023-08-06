@@ -1,14 +1,16 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto';
 import { Profile } from './entities/profile.entity';
 
 @ApiTags('Profile-Controller')
+@ApiBearerAuth()
 @Controller('api/profiles')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to create a profile.' })
   @ApiCreatedResponse({ 
     type: Profile,
     description: 'The profile has been successfully created.' 
@@ -20,6 +22,7 @@ export class ProfileController {
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
   @ApiQuery({ name: 'pageSize', example: 5 })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get all profiles.' })
   @ApiOkResponse({ 
     type: Profile, 
     isArray: true,
@@ -31,22 +34,34 @@ export class ProfileController {
     return this.profileService.findAll(pageNumber, pageSize);
   }
 
-  @ApiOkResponse({ type: Profile })
-  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Profile,
+    description: 'Profile has been successfully found.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to get a profile.' })
+  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Get(':id')
   findProfile(@Param('id') id: number) {
     return this.profileService.findOne(id);
   }
 
-  @ApiOkResponse({ type: Profile })
-  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Profile,
+    description: 'Profile has been successfully updated.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to update a profile.' })
+  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Put(':id')
   updateProfile(@Param('id') id: number, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(id, updateProfileDto);
   }
 
-  @ApiOkResponse({ type: Profile })
-  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found' })
+  @ApiOkResponse({ 
+    type: Profile,
+    description: 'Profile has been successfully deleted.' 
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized to delete a profile.' })
+  @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Delete(':id')
   removeProfile(@Param('id') id: number) {
     return this.profileService.remove(id);

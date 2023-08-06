@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn } from "typeorm";
-import { Profile } from "src/profile/entities/profile.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Profile } from "src/profile/entities/profile.entity";
 
 @Entity()
 export class User {
@@ -24,6 +24,10 @@ export class User {
     @ApiProperty()
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
+
+    @ApiProperty()
+    @Column({ name: 'hashed_refresh_token', nullable: true })
+    hashedRefreshToken: string;
 
     @ApiProperty({ type: () => Profile })
     @OneToOne(() => Profile, (profile) => profile.user)
