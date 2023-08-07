@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Param, Delete, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CastService } from './cast.service';
 import { Actor } from 'src/actor/entities/actor.entity';
 import { Public } from 'src/common/decorators';
+import { Role } from 'src/auth/enum/role';
+import { HasRole } from 'src/common/decorators/has-role.decorator';
+import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Cast-Controller')
 @Controller('api/cast')
@@ -21,7 +24,10 @@ export class CastController {
     return this.castService.getWatchableCast(watchableId);
   }
   
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiOkResponse({ description: 'Actor has been successfully added to a cast.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to add actor to cast.' })
   @ApiNotFoundResponse({ description: 'Watchable or actor with provided ids could not be found.' })
@@ -31,7 +37,10 @@ export class CastController {
     return this.castService.addToCast(watchableId, actorId);
   }
   
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiOkResponse({ description: 'Actor has been successfully removed from a cast.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to remove actor from cast.' })
   @ApiNotFoundResponse({ description: 'Watchable or actor with provided ids could not be found.' })
