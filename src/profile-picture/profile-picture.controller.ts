@@ -4,6 +4,7 @@ import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfilePictureService } from './profile-picture.service';
 import { ProfilePicture } from './entities/profile-picture.entity';
+import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Profile-Picture-Controller')
 @ApiBearerAuth()
@@ -26,15 +27,15 @@ export class ProfilePictureController {
       },
     },
   })
-  @Post('upload/:profileId')
+  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadProfilePicture(@UploadedFile(
     new ParseFilePipeBuilder()
     .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
     .addMaxSizeValidator({ maxSize: 1000000 })
     .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
-  ) imageFile: Express.Multer.File, @Param('profileId') profileId: number) {
-    this.profilePictureService.uploadProfilePicture(imageFile, profileId);
+  ) imageFile: Express.Multer.File, @GetCurrentUserId() userId: number) {
+    this.profilePictureService.uploadProfilePicture(imageFile, userId);
   }
 
   @ApiOkResponse({ 
@@ -43,16 +44,16 @@ export class ProfilePictureController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to get a profile picture.' })
   @ApiNotFoundResponse({ description: 'Profile Picture with provided id could not be found.' })
-  @Get(':id')
-  getProfilePicture(@Param('id') id: number) {
-    return this.profilePictureService.getProfilePicture(id);
+  @Get()
+  getProfilePicture(@GetCurrentUserId() userId: number) {
+    return this.profilePictureService.getProfilePicture(userId);
   }
 
   @ApiOkResponse({ description: 'Profile Picture has been successfully removed.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to remove a profile picture.' })
   @ApiNotFoundResponse({ description: 'Profile Picture with provided id could not be found.' })
-  @Delete(':id')
-  removeProfilePicture(@Param('id') id: number) {
-    this.profilePictureService.removeProfilePicture(id);
+  @Delete()
+  removeProfilePicture(@GetCurrentUserId() userId: number) {
+    this.profilePictureService.removeProfilePicture(userId);
   }
 }
