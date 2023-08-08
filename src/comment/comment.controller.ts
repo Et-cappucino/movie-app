@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, 
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto';
 import { Comment } from './entities/comment.entity';
-import { Public } from 'src/common/decorators';
+import { GetCurrentUserId, Public } from 'src/common/decorators';
 
 @ApiTags('Comment-Controller')
 @Controller('api/comments')
@@ -17,8 +17,9 @@ export class CommentController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to post a comment.' })
   @Post()
-  postComment(@Body() createCommentDto: CreateCommentDto) {
-    this.commentService.postComment(createCommentDto);
+  postComment(@Body() createCommentDto: CreateCommentDto,
+              @GetCurrentUserId() userId: number) {
+    this.commentService.postComment(createCommentDto, userId);
   }
 
   @ApiBearerAuth()
@@ -63,11 +64,11 @@ export class CommentController {
     isArray: true,
     description: 'Retrieve all Comments from a particular Profile by ID with pagination and sorting support.' 
   })
-  @Get('/profile-:profileId')
+  @Get()
   getProfileAllComments(@Query('pageNumber') pageNumber: number = 0, 
                         @Query('pageSize') pageSize: number = 5,
-                        @Param('profileId') profileId: number) {
-    return this.commentService.findProfileAllComments(profileId, pageNumber, pageSize);
+                        @GetCurrentUserId() userId: number) {
+    return this.commentService.findProfileAllComments(userId, pageNumber, pageSize);
   }
 
   @Public()
