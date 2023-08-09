@@ -17,8 +17,8 @@ export class CommentService {
     private readonly paginationService: PaginationService
   ) {}
   
-  async postComment(createCommentDto: CreateCommentDto) {
-    const profile = await this.profileService.findOne(createCommentDto.commenterId);
+  async postComment(createCommentDto: CreateCommentDto, commenterId: number) {
+    const profile = await this.profileService.findOne(commenterId);
     const watchable = await this.watchableService.findOne(createCommentDto.watchableId);
     
     const comment = this.commentRepository.create(createCommentDto);

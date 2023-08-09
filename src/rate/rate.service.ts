@@ -17,14 +17,14 @@ export class RateService {
     private readonly pagainationService: PaginationService
   ) {}
   
-  async create(createRateDto: CreateRateDto) {
-    const isAlreadyRated = await this.validateRateAttempt(createRateDto);
+  async create(createRateDto: CreateRateDto, profileId: number ) {
+    const isAlreadyRated = await this.validateRateAttempt(createRateDto.watchableId, profileId);
     
     if (!isAlreadyRated) {
-      const profile = await this.profileService.findOne(createRateDto.profileId);
+      const profile = await this.profileService.findOne(profileId);
       const watchable = await this.watchableService.findOne(createRateDto.watchableId);
       
-      const rate = this.rateRepository.create(createRateDto);
+      const rate = this.rateRepository.create(createRateDto);      
       rate.profile = profile;
       rate.watchable = watchable;
 
@@ -70,14 +70,14 @@ export class RateService {
     return this.pagainationService.paginate(rates, pageNumber, pageSize, count);
   }
 
-  private async validateRateAttempt(createRateDto: CreateRateDto) {
+  private async validateRateAttempt(watchableId: number, profileId: number) {
     const rate = await this.rateRepository.findOne({
       where: {
         profile: {
-          id: createRateDto.profileId
+          id: profileId
         },
         watchable: {
-          id: createRateDto.watchableId
+          id: watchableId
         }
       }
     })

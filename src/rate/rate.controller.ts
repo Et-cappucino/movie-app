@@ -3,10 +3,11 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags, Ap
 import { RateService } from './rate.service';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { Rate } from './entities/rate.entity';
+import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Rate-Controller')
 @ApiBearerAuth()
-@Controller('api/rates')
+@Controller('rates')
 export class RateController {
   constructor(private readonly rateService: RateService) {}
 
@@ -16,8 +17,9 @@ export class RateController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to rate a watchable.' })
   @Post()
-  rateWatchable(@Body() createRateDto: CreateRateDto) {
-    this.rateService.create(createRateDto);
+  rateWatchable(@Body() createRateDto: CreateRateDto,
+                @GetCurrentUserId() userId: number) {
+    this.rateService.create(createRateDto, userId);
   }
 
   @ApiQuery({ name: 'pageNumber', example: 0 })

@@ -7,7 +7,7 @@ import { GetCurrentUserId, GetCurrentUserRefreshToken, Public } from 'src/common
 import { RefreshTokenGuard } from 'src/common/guards';
 
 @ApiTags('Auth-Controller')
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 

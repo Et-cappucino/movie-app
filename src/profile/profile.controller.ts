@@ -1,15 +1,21 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto';
 import { Profile } from './entities/profile.entity';
+import { Role } from 'src/auth/enum/role';
+import { HasRole } from 'src/common/decorators/has-role.decorator';
+import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Profile-Controller')
 @ApiBearerAuth()
-@Controller('api/profiles')
+@Controller('profiles')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to create a profile.' })
   @ApiCreatedResponse({ 
     type: Profile,

@@ -1,16 +1,22 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { WatchableService } from './services';
 import { CreateWatchableDto, UpdateWatchableDto } from './dto';
 import { Watchable } from './entities';
 import { Public } from 'src/common/decorators';
+import { Role } from 'src/auth/enum/role';
+import { HasRole } from 'src/common/decorators/has-role.decorator';
+import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Watchable-Controller')
-@Controller('api/watchables')
+@Controller('watchables')
 export class WatchableController {
   constructor(private readonly watchableService: WatchableService) {}
 
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to create watchable.' })
   @ApiCreatedResponse({ 
     type: Watchable, 
@@ -46,11 +52,14 @@ export class WatchableController {
     return this.watchableService.findOne(id);
   }
 
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ 
     type: Watchable, 
     description: 'Watchable has been successfully updated.' 
   })
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to update watchable.' })
   @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found.' })
   @Put(':id')
@@ -58,11 +67,14 @@ export class WatchableController {
     return this.watchableService.update(id, updateWatchableDto);
   }
 
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ 
     type: Watchable, 
     description: 'Watchable has been successfully deleted.' 
   })
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to delete watchable.' })
   @ApiNotFoundResponse({ description: 'Watchable with provided id could not be found.' })
   @Delete(':id')

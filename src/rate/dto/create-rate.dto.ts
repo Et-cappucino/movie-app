@@ -27,12 +27,6 @@ export class CreateRateDto {
     @IsPositive()
     questionThreeValue: number;
 
-    @ApiProperty({ example: '1', description: 'Id of the profile who rates the watchable' })
-    @IsNumber()
-    @IsNotEmpty()
-    @IsPositive()
-    profileId: number;
-
     @ApiProperty({ example: '222100', description: 'Id of the watchable under which has been rated' })
     @IsNumber()
     @IsNotEmpty()

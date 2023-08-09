@@ -2,10 +2,11 @@ import { Controller, Param, Get, Delete, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiNotFoundResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { WatchlistService } from './watchlist.service';
 import { Watchable } from 'src/watchable/entities';
+import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Watchlist-Controller')
 @ApiBearerAuth()
-@Controller('api/watchlist')
+@Controller('watchlist')
 export class WatchlistController {
     constructor(private readonly watchlistService: WatchlistService) {}
 
@@ -18,8 +19,8 @@ export class WatchlistController {
     })
     @ApiUnauthorizedResponse({ description: 'Unauthorized to get a watchlist.' })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
-    @Get(':profileId')
-    getProfileWatchlist(@Param('profileId') profileId: number,
+    @Get()
+    getProfileWatchlist(@GetCurrentUserId() profileId: number,
                         @Query('pageNumber') pageNumber: number = 0, 
                         @Query('pageSize') pageSize: number = 5) {
         return this.watchlistService.getProfileWatchlist(profileId, pageNumber, pageSize);
@@ -28,8 +29,8 @@ export class WatchlistController {
     @ApiOkResponse({ description: 'Watchable has been successfully added to a watchlist.' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized to add watchable to a watchlist.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
-    @Put(':profileId/:watchableId')
-    addToWatchlist(@Param('profileId') profileId: number,
+    @Put(':watchableId')
+    addToWatchlist(@GetCurrentUserId() profileId: number,
                    @Param('watchableId') watchableId: number) {
         this.watchlistService.addToWatchlist(profileId, watchableId);
     }
@@ -37,8 +38,8 @@ export class WatchlistController {
     @ApiOkResponse({ description: 'Watchable has been successfully removed from a watchlist.' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized to remove watchable from a watchlist.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
-    @Delete(':profileId/:watchableId')
-    removeFromWatchlist(@Param('profileId') profileId: number,
+    @Delete(':watchableId')
+    removeFromWatchlist(@GetCurrentUserId() profileId: number,
                         @Param('watchableId') watchableId: number) {
         this.watchlistService.removeFromWatchlist(profileId, watchableId);
     }

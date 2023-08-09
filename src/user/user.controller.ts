@@ -1,19 +1,25 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiConflictResponse, ApiQuery, ApiBearerAuth, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './entities/user.entity';
+import { Role } from 'src/auth/enum/role';
+import { HasRole } from 'src/common/decorators/has-role.decorator';
+import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('User-Controller')
 @ApiBearerAuth()
-@Controller('api/users')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @HasRole(Role.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiCreatedResponse({ 
     type: User,
     description: 'The user has been successfully created.' 
   })
+  @ApiForbiddenResponse({ description: 'Forbidden resource.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to register a user.' })
   @ApiConflictResponse({ description: 'User with provided email already exists.' })
   @Post()

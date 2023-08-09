@@ -8,12 +8,6 @@ export class CreateCommentDto {
     @IsString()
     text: string;
 
-    @ApiProperty({ example: '1', description: 'Id of the author of the comment' })
-    @IsNumber()
-    @IsNotEmpty()
-    @IsPositive()
-    commenterId: number;
-
     @ApiProperty({ example: '222100', description: 'Id of the watchable under which the comment is posted' })
     @IsNumber()
     @IsNotEmpty()

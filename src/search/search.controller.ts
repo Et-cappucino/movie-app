@@ -3,10 +3,10 @@ import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedRespons
 import { SearchService } from './search.service';
 import { GenreEnum, WatchableType } from 'src/watchable/enums';
 import { Watchable } from 'src/watchable/entities';
-import { Public } from 'src/common/decorators';
+import { GetCurrentUserEmail, Public } from 'src/common/decorators';
 
 @ApiTags('Search-Controller')
-@Controller('api/search')
+@Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
@@ -36,9 +36,9 @@ export class SearchController {
   })
   @Get('userSearch')
   userSearchWatchables(@Query('query') query: string,
-                       @Query('email') email: string,
                        @Query('pageNumber') pageNumber: number = 0, 
-                       @Query('pageSize') pageSize: number = 5) {
+                       @Query('pageSize') pageSize: number = 5,
+                       @GetCurrentUserEmail() email: string) {
     return this.searchService.searchWatchables(query, pageNumber, pageSize, email);
   }
 
