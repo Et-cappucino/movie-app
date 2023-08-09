@@ -6,7 +6,7 @@ import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Favorite-Watchables-Controller')
 @ApiBearerAuth()
-@Controller('api/favorites')
+@Controller('favorites')
 export class FavoriteWatchablesController {
 
     constructor(private readonly favoritesService: FavoriteWatchablesService) {}

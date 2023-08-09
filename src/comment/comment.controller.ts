@@ -6,7 +6,7 @@ import { Comment } from './entities/comment.entity';
 import { GetCurrentUserId, Public } from 'src/common/decorators';
 
 @ApiTags('Comment-Controller')
-@Controller('api/comments')
+@Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 

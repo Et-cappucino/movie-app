@@ -8,7 +8,7 @@ import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Profile-Picture-Controller')
 @ApiBearerAuth()
-@Controller('api/images')
+@Controller('images')
 export class ProfilePictureController {
   constructor(private readonly profilePictureService: ProfilePictureService) {}
 

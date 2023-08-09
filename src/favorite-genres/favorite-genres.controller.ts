@@ -8,7 +8,7 @@ import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Favorite-Genres-Controller')
 @ApiBearerAuth()
-@Controller('api/genres')
+@Controller('genres')
 export class FavoriteGenresController {
   constructor(private readonly favoriteGenresService: FavoriteGenresService) {}
 

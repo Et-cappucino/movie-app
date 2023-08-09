@@ -6,7 +6,7 @@ import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Watchlist-Controller')
 @ApiBearerAuth()
-@Controller('api/watchlist')
+@Controller('watchlist')
 export class WatchlistController {
     constructor(private readonly watchlistService: WatchlistService) {}
 

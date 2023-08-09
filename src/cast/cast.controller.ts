@@ -8,7 +8,7 @@ import { HasRole } from 'src/common/decorators/has-role.decorator';
 import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Cast-Controller')
-@Controller('api/cast')
+@Controller('cast')
 export class CastController {
   constructor(private readonly castService: CastService) {}
 

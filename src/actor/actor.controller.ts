@@ -9,7 +9,7 @@ import { Role } from 'src/auth/enum/role';
 import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Actor-Controller')
-@Controller('api/actors')
+@Controller('actors')
 export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 

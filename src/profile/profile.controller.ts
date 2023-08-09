@@ -9,7 +9,7 @@ import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Profile-Controller')
 @ApiBearerAuth()
-@Controller('api/profiles')
+@Controller('profiles')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 

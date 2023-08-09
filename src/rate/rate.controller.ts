@@ -7,7 +7,7 @@ import { GetCurrentUserId } from 'src/common/decorators';
 
 @ApiTags('Rate-Controller')
 @ApiBearerAuth()
-@Controller('api/rates')
+@Controller('rates')
 export class RateController {
   constructor(private readonly rateService: RateService) {}
 

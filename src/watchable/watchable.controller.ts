@@ -9,7 +9,7 @@ import { HasRole } from 'src/common/decorators/has-role.decorator';
 import { RoleGuard } from 'src/common/guards/role.guard';
 
 @ApiTags('Watchable-Controller')
-@Controller('api/watchables')
+@Controller('watchables')
 export class WatchableController {
   constructor(private readonly watchableService: WatchableService) {}
 

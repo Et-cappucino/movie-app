@@ -7,7 +7,7 @@ import { Public } from 'src/common/decorators';
 
 @Public()
 @ApiTags('Filter-Controller')
-@Controller('api/filter')
+@Controller('filter')
 export class FilterController {
   constructor(private readonly filterService: FilterService) {}
 

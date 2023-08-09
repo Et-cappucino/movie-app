@@ -6,7 +6,7 @@ import { Watchable } from 'src/watchable/entities';
 import { GetCurrentUserEmail, Public } from 'src/common/decorators';
 
 @ApiTags('Search-Controller')
-@Controller('api/search')
+@Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
