@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { OnEvent } from '@nestjs/event-emitter';
 import { MailOptions } from './types/mail-options.type';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class MailSenderService {
         private readonly mailSenderService: MailerService
     ) {}
     
+    @OnEvent('user-signed-up')
     async sendConfirmationMail(email: string) {
         const options: MailOptions = {
             to: email,
