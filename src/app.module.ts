@@ -18,6 +18,7 @@ import { FilterModule } from './filter/filter.module';
 import { AuthModule } from './auth/auth.module';
 import { AccessTokenGuard } from './common/guards';
 import { MailSenderModule } from './mail-sender/mail-sender.module';
+import { EmailConfirmationTokenModule } from './email-confirmation-token/email-confirmation-token.module';
 
 
 @Module({
@@ -38,7 +39,8 @@ import { MailSenderModule } from './mail-sender/mail-sender.module';
     SearchModule, 
     FilterModule, 
     AuthModule, 
-    MailSenderModule,
+    MailSenderModule, 
+    EmailConfirmationTokenModule,
   ],
   controllers: [],
   providers: [
