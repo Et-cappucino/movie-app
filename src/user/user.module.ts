@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProfileModule } from 'src/profile/profile.module';
 import { PaginationModule } from 'src/utils/pagination/pagination.module';
 
@@ -10,7 +11,8 @@ import { PaginationModule } from 'src/utils/pagination/pagination.module';
   imports: [
     TypeOrmModule.forFeature([User]), 
     ProfileModule,
-    PaginationModule
+    PaginationModule,
+    EventEmitterModule.forRoot()
   ],
   controllers: [UserController],
   providers: [UserService],
