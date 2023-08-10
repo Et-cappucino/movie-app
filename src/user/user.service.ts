@@ -32,7 +32,8 @@ export class UserService {
   async findAll(pageNumber: number, pageSize: number) {
     const [users, count] = await this.userRepository.findAndCount({
       relations: {
-        profile: true
+        profile: true,
+        emailConfirmationToken: true
       },
       skip: pageNumber * pageSize,
       take: pageSize
@@ -45,7 +46,8 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: {
-        profile: true
+        profile: true,
+        emailConfirmationToken: true
       }
     });
     

@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Profile } from "src/profile/entities/profile.entity";
+import { EmailConfirmationToken } from "src/email-confirmation-token/entities/email-confirmation-token.entity";
 
 @Entity()
 export class User {
@@ -32,4 +33,8 @@ export class User {
     @ApiProperty({ type: () => Profile })
     @OneToOne(() => Profile, (profile) => profile.user)
     profile: Profile;
+
+    @ApiProperty({ type: () => EmailConfirmationToken })
+    @OneToOne(() => EmailConfirmationToken, (emailConfirmationToken) => emailConfirmationToken.user)
+    emailConfirmationToken: EmailConfirmationToken;
 }

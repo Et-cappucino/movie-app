@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/user/entities/user.entity";
 
 @Entity()
 export class EmailConfirmationToken {
@@ -23,4 +24,9 @@ export class EmailConfirmationToken {
     @ApiProperty()
     @Column({ name: 'confirmed_at', type: 'datetime', nullable: true })
     confirmedAt: Date;
+
+    @ApiProperty({ type: () => User })
+    @OneToOne(() => User, (user) => user.emailConfirmationToken, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 }
