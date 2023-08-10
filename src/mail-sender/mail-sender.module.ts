@@ -23,7 +23,6 @@ import { MailSenderService } from './mail-sender.service';
       }),
     inject: [ConfigService],
   })],
-  providers: [MailSenderService],
-  exports: [MailSenderService]
+  providers: [MailSenderService]
 })
 export class MailSenderModule {}
