@@ -12,14 +12,14 @@ export class MailSenderService {
     ) {}
     
     @OnEvent('user-signed-up')
-    async sendConfirmationMail(email: string) {
+    async sendConfirmationMail(email: string, token: string) {
         const options: MailOptions = {
             to: email,
             subject: 'Confirm your email to activate your profile!',
             from: this.configService.getOrThrow<string>('MAIL_USERNAME'),
             template: 'confirmation-email',
             context: { 
-                link:'random_link_for_confirmation' 
+                link: this.configService.getOrThrow<string>('EMAIL_CONFIRMATION_BASE_LINK') + token            
             }
         }
         await this.mailSenderService.sendMail(options);

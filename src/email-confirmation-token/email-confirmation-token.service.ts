@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { EmailConfirmationToken } from './entities/email-confirmation-token.entity';
 
 @Injectable()
@@ -20,9 +21,10 @@ export class EmailConfirmationTokenService {
   @OnEvent('user-created')
   generateToken() {
     const minutes = this.configService.getOrThrow<number>('EXPIRATION_MINUTES')
+    const uuid = uuidv4();
     
     const token = this.emailConfirmationTokenRepository.create({
-      token: 'random-token-uuid',
+      token: uuid,
       createdAt: new Date(),
       expiresAt: new Date(this.getExpirationTime(minutes))
     })

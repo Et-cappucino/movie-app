@@ -28,7 +28,7 @@ export class AuthService {
         
         await this.userService.updateHashedRefreshToken(user.id, tokens.refresh_token);
 
-        await this.eventEmitter.emitAsync('user-signed-up', user.email);
+        await this.eventEmitter.emitAsync('user-signed-up', user.email, user.emailConfirmationToken.token);
        
         return tokens
     }
