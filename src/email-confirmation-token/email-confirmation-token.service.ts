@@ -14,8 +14,13 @@ export class EmailConfirmationTokenService {
     private readonly configService: ConfigService
   ) {}
   
-  confirm(token: string) {
-    return 'Email Confirmed'
+  async confirm(token: string) {
+    const confirmationToken = await this.findConfirmationToken(token);
+    
+    await this.emailConfirmationTokenRepository.save({
+      ...confirmationToken,
+      confirmedAt: new Date()
+    })
   }
 
   @OnEvent('user-created')
@@ -35,5 +40,15 @@ export class EmailConfirmationTokenService {
   private getExpirationTime(minutes: number) {
     const currentDate = new Date();
     return currentDate.setMinutes(currentDate.getMinutes() + minutes);  
+  }
+
+  private async findConfirmationToken(token: string) {
+    const confirmationToken = await this.emailConfirmationTokenRepository.findOne({
+      where: {
+        token
+      }
+    })
+
+    return confirmationToken
   }
 }
