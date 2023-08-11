@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
@@ -15,7 +15,7 @@ export class EmailConfirmationTokenService {
   ) {}
   
   async confirm(token: string) {
-    const confirmationToken = await this.findConfirmationToken(token);
+    const confirmationToken = await this.validateConfirmationToken(token);
     
     await this.emailConfirmationTokenRepository.save({
       ...confirmationToken,
@@ -25,13 +25,13 @@ export class EmailConfirmationTokenService {
 
   @OnEvent('user-created')
   generateToken() {
-    const minutes = this.configService.getOrThrow<number>('EXPIRATION_MINUTES')
+    const minutes = this.configService.getOrThrow<string>('EXPIRATION_MINUTES')
     const uuid = uuidv4();
     
     const token = this.emailConfirmationTokenRepository.create({
       token: uuid,
       createdAt: new Date(),
-      expiresAt: new Date(this.getExpirationTime(minutes))
+      expiresAt: new Date(this.getExpirationTime(parseInt(minutes)))
     })
     
     return this.emailConfirmationTokenRepository.save(token);
@@ -49,6 +49,20 @@ export class EmailConfirmationTokenService {
       }
     })
 
+    return confirmationToken
+  }
+
+  private async validateConfirmationToken(token: string) {
+    const confirmationToken = await this.findConfirmationToken(token);
+
+    if (confirmationToken.confirmedAt) {
+      throw new ForbiddenException('Email has been already confirmed')
+    }
+
+    if (confirmationToken.expiresAt < new Date()) {
+      throw new ForbiddenException('Confirmation Token ' + token + ' has already expired')
+    }
+    
     return confirmationToken
   }
 }
