@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
@@ -98,6 +98,16 @@ export class UserService {
     await this.userRepository.save({
       ...user,
       hashedRefreshToken: token ? await this.encrypt(token) : null
+    })
+  }
+
+  @OnEvent('email-confirmed')
+  async enableUser(id: number) {
+    const user = await this.findOne(id);
+    
+    await this.userRepository.save({
+      ...user,
+      isEnabled: true
     })
   }
 

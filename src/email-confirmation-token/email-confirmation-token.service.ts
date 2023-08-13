@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,7 +12,8 @@ export class EmailConfirmationTokenService {
   constructor(
     @InjectRepository(EmailConfirmationToken)
     private readonly emailConfirmationTokenRepository: Repository<EmailConfirmationToken>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async confirm(token: string) {
@@ -22,6 +23,8 @@ export class EmailConfirmationTokenService {
       ...confirmationToken,
       confirmedAt: new Date()
     })
+
+    await this.eventEmitter.emitAsync('email-confirmed', confirmationToken.id);
   }
 
   @OnEvent('user-created')
