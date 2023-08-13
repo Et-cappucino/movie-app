@@ -23,6 +23,10 @@ export class User {
     isAdmin: boolean;
 
     @ApiProperty()
+    @Column({ name: 'is_enabled', default: false })
+    isEnabled: boolean;
+
+    @ApiProperty()
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
