@@ -20,9 +20,9 @@ export class WatchlistController {
     @ApiUnauthorizedResponse({ description: 'Unauthorized to get a watchlist.' })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
     @Get()
-    getProfileWatchlist(@GetCurrentUserId() profileId: number,
-                        @Query('pageNumber') pageNumber: number = 0, 
-                        @Query('pageSize') pageSize: number = 5) {
+    async getProfileWatchlist(@GetCurrentUserId() profileId: number,
+                              @Query('pageNumber') pageNumber: number = 0, 
+                              @Query('pageSize') pageSize: number = 5) {
         return this.watchlistService.getProfileWatchlist(profileId, pageNumber, pageSize);
     }
   
@@ -30,17 +30,17 @@ export class WatchlistController {
     @ApiUnauthorizedResponse({ description: 'Unauthorized to add watchable to a watchlist.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Put(':watchableId')
-    addToWatchlist(@GetCurrentUserId() profileId: number,
-                   @Param('watchableId') watchableId: number) {
-        this.watchlistService.addToWatchlist(profileId, watchableId);
+    async addToWatchlist(@GetCurrentUserId() profileId: number,
+                         @Param('watchableId') watchableId: number) {
+        await this.watchlistService.addToWatchlist(profileId, watchableId);
     }
   
     @ApiOkResponse({ description: 'Watchable has been successfully removed from a watchlist.' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized to remove watchable from a watchlist.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Delete(':watchableId')
-    removeFromWatchlist(@GetCurrentUserId() profileId: number,
-                        @Param('watchableId') watchableId: number) {
-        this.watchlistService.removeFromWatchlist(profileId, watchableId);
+    async removeFromWatchlist(@GetCurrentUserId() profileId: number,
+                              @Param('watchableId') watchableId: number) {
+        await this.watchlistService.removeFromWatchlist(profileId, watchableId);
     }
 }

@@ -21,9 +21,9 @@ export class FavoriteWatchablesController {
     @ApiUnauthorizedResponse({ description: 'Unauthorized to get a favorites list.' })
     @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
     @Get(':profileId')
-    getProfileFavorites(@GetCurrentUserId() profileId: number,
-                        @Query('pageNumber') pageNumber: number = 0, 
-                        @Query('pageSize') pageSize: number = 5) {
+    async getProfileFavorites(@GetCurrentUserId() profileId: number,
+                              @Query('pageNumber') pageNumber: number = 0, 
+                              @Query('pageSize') pageSize: number = 5) {
         return this.favoritesService.getProfileFavorites(profileId, pageNumber, pageSize);
     }
   
@@ -31,17 +31,17 @@ export class FavoriteWatchablesController {
     @ApiUnauthorizedResponse({ description: 'Unauthorized to add watchable to a favorites list.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Put(':watchableId')
-    addToFavorites(@GetCurrentUserId() profileId: number,
-                   @Param('watchableId') watchableId: number) {
-        this.favoritesService.addToFavorites(profileId, watchableId);
+    async addToFavorites(@GetCurrentUserId() profileId: number,
+                         @Param('watchableId') watchableId: number) {
+        await this.favoritesService.addToFavorites(profileId, watchableId);
     }
   
     @ApiOkResponse({ description: 'Watchable has been successfully removed from a favorites list.' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized to remove watchable from a favorites list.' })
     @ApiNotFoundResponse({ description: 'Watchable or profile with provided ids could not be found.' })
     @Delete(':watchableId')
-    removeFromFavorites(@GetCurrentUserId() profileId: number,
-                        @Param('watchableId') watchableId: number) {
-        this.favoritesService.removeFromFavorites(profileId, watchableId);
+    async removeFromFavorites(@GetCurrentUserId() profileId: number,
+                              @Param('watchableId') watchableId: number) {
+        await this.favoritesService.removeFromFavorites(profileId, watchableId);
     }
 }

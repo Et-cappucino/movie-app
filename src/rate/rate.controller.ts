@@ -17,9 +17,9 @@ export class RateController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to rate a watchable.' })
   @Post()
-  rateWatchable(@Body() createRateDto: CreateRateDto,
-                @GetCurrentUserId() userId: number) {
-    this.rateService.create(createRateDto, userId);
+  async rateWatchable(@Body() createRateDto: CreateRateDto,
+                      @GetCurrentUserId() userId: number) {
+    await this.rateService.create(createRateDto, userId);
   }
 
   @ApiQuery({ name: 'pageNumber', example: 0 })
@@ -31,9 +31,9 @@ export class RateController {
     description: 'Retrieve all Rates of a particular Watchable by ID with pagination and sorting support.' 
   })
   @Get('watchable-:watchableId')
-  getWatchableRates(@Query('pageNumber') pageNumber: number = 0, 
-                    @Query('pageSize') pageSize: number = 10,
-                    @Param('watchableId') watchableId: number) {
+  async getWatchableRates(@Query('pageNumber') pageNumber: number = 0, 
+                          @Query('pageSize') pageSize: number = 10,
+                          @Param('watchableId') watchableId: number) {
     return this.rateService.findAllWatchableRates(watchableId, pageNumber, pageSize);
   }
 
@@ -46,9 +46,9 @@ export class RateController {
     description: 'Retrieve all Rates of a particular Profile by ID with pagination and sorting support.' 
   })
   @Get('profile-:profileId')
-  getProfileRates(@Query('pageNumber') pageNumber: number = 0, 
-                  @Query('pageSize') pageSize: number = 10,
-                  @Param('profileId') profileId: number) {
+  async getProfileRates(@Query('pageNumber') pageNumber: number = 0, 
+                        @Query('pageSize') pageSize: number = 10,
+                        @Param('profileId') profileId: number) {
     return this.rateService.findAllProfileRates(profileId, pageNumber, pageSize);
   }
 }

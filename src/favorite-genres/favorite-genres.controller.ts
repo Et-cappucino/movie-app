@@ -20,7 +20,7 @@ export class FavoriteGenresController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized to get the favorite genre list of the User.' })
   @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Get()
-  getProfileFavoriteGenres(@GetCurrentUserId() profileId: number) {
+  async getProfileFavoriteGenres(@GetCurrentUserId() profileId: number) {
     return this.favoriteGenresService.getProfileFavoriteGenres(profileId);
   }
   
@@ -28,9 +28,9 @@ export class FavoriteGenresController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized to add genre to a favorite genre list.' })
   @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Put()
-  addToFavoriteGenres(@GetCurrentUserId() profileId: number,
-                      @Body() updateFavoriteGenresDto: UpdateFavoriteGenresDto) {
-    this.favoriteGenresService.addToFavoriteGenres(profileId, updateFavoriteGenresDto);
+  async addToFavoriteGenres(@GetCurrentUserId() profileId: number,
+                            @Body() updateFavoriteGenresDto: UpdateFavoriteGenresDto) {
+    await this.favoriteGenresService.addToFavoriteGenres(profileId, updateFavoriteGenresDto);
   }
 
   @ApiQuery({ name: 'genre', enum: GenreEnum })
@@ -38,8 +38,8 @@ export class FavoriteGenresController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized to remove genre from a favorite genre list.' })
   @ApiNotFoundResponse({ description: 'Profile with provided id could not be found.' })
   @Delete()
-  removeFromFavoriteGenres(@GetCurrentUserId() profileId: number,
-                           @Query('genre') genre: GenreEnum) {
-    this.favoriteGenresService.removeFromFavoriteGenres(profileId, genre);
+  async removeFromFavoriteGenres(@GetCurrentUserId() profileId: number,
+                                 @Query('genre') genre: GenreEnum) {
+    await this.favoriteGenresService.removeFromFavoriteGenres(profileId, genre);
   }
 }

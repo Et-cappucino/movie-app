@@ -17,9 +17,9 @@ export class CommentController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized to post a comment.' })
   @Post()
-  postComment(@Body() createCommentDto: CreateCommentDto,
-              @GetCurrentUserId() userId: number) {
-    this.commentService.postComment(createCommentDto, userId);
+  async postComment(@Body() createCommentDto: CreateCommentDto,
+                    @GetCurrentUserId() userId: number) {
+    await this.commentService.postComment(createCommentDto, userId);
   }
 
   @ApiBearerAuth()
@@ -32,10 +32,10 @@ export class CommentController {
     description: 'Retrieve all Comments from a particular Profile under a particular Watchable by IDs with pagination and sorting support.' 
   })
   @Get('/profile-:profileId/watchable-:watchableId')
-  getProfileAllWatchableComments(@Query('pageNumber') pageNumber: number = 0, 
-                                 @Query('pageSize') pageSize: number = 5,
-                                 @Param('profileId') profileId: number,
-                                 @Param('watchableId') watchableId: number) {
+  async getProfileAllWatchableComments(@Query('pageNumber') pageNumber: number = 0, 
+                                       @Query('pageSize') pageSize: number = 5,
+                                       @Param('profileId') profileId: number,
+                                       @Param('watchableId') watchableId: number) {
     return this.commentService.findAllComments(profileId, watchableId, pageNumber, pageSize);
   }
 
@@ -49,9 +49,9 @@ export class CommentController {
     description: 'Retrieve all Comments under a particular Watchable by ID with pagination and sorting support.' 
   })
   @Get('/watchable-:watchableId')
-  getWatchableAllComments(@Query('pageNumber') pageNumber: number = 0, 
-                          @Query('pageSize') pageSize: number = 5,
-                          @Param('watchableId') watchableId: number) {
+  async getWatchableAllComments(@Query('pageNumber') pageNumber: number = 0, 
+                                @Query('pageSize') pageSize: number = 5,
+                                @Param('watchableId') watchableId: number) {
     return this.commentService.findWatchableAllComments(watchableId, pageNumber, pageSize);
   }
 
@@ -65,9 +65,9 @@ export class CommentController {
     description: 'Retrieve all Comments from a particular Profile by ID with pagination and sorting support.' 
   })
   @Get()
-  getProfileAllComments(@Query('pageNumber') pageNumber: number = 0, 
-                        @Query('pageSize') pageSize: number = 5,
-                        @GetCurrentUserId() userId: number) {
+  async getProfileAllComments(@Query('pageNumber') pageNumber: number = 0, 
+                              @Query('pageSize') pageSize: number = 5,
+                              @GetCurrentUserId() userId: number) {
     return this.commentService.findProfileAllComments(userId, pageNumber, pageSize);
   }
 
@@ -78,7 +78,7 @@ export class CommentController {
   })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Get(':id')
-  getComment(@Param('id') id: number) {
+  async getComment(@Param('id') id: number) {
     return this.commentService.getComment(id);
   }
 
@@ -90,8 +90,8 @@ export class CommentController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized to edit a comment.' })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Put(':id')
-  updateComment(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
-    this.commentService.updateComment(id, updateCommentDto);
+  async updateComment(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
+    await this.commentService.updateComment(id, updateCommentDto);
   }
 
   @ApiBearerAuth()
@@ -102,7 +102,7 @@ export class CommentController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized to delete a comment.' })
   @ApiNotFoundResponse({ description: 'Comment with provided id could not be found.' })
   @Delete(':id')
-  removeComment(@Param('id') id: number) {
-    this.commentService.removeComment(id);
+  async removeComment(@Param('id') id: number) {
+    await this.commentService.removeComment(id);
   }
 }
