@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
@@ -109,6 +110,19 @@ export class UserService {
       ...user,
       isEnabled: true
     })
+  }
+
+  @Cron(CronExpression.EVERY_5_HOURS)
+  async cleanupNotEnabledUsers() {
+    const notEnabledUsers = await this.userRepository.find({
+      where: {
+        isEnabled: false
+      }
+    })
+    
+    if (notEnabledUsers.length !== 0) {
+      await this.userRepository.remove(notEnabledUsers);
+    }
   }
 
   private async validateEmailUnique(email: string, id?: number) {
