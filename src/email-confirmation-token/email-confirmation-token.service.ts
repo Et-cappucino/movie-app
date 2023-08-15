@@ -24,7 +24,7 @@ export class EmailConfirmationTokenService {
       confirmedAt: new Date()
     })
 
-    await this.eventEmitter.emitAsync('email-confirmed', confirmationToken.id);
+    await this.eventEmitter.emitAsync('email-confirmed', confirmationToken.user.id);
   }
 
   @OnEvent('user-created')
@@ -50,6 +50,9 @@ export class EmailConfirmationTokenService {
     const confirmationToken = await this.emailConfirmationTokenRepository.findOne({
       where: {
         token
+      },
+      relations: {
+        user: true
       }
     })
 
