@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as Bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
 import { JwtPayload, Tokens } from './types';
@@ -12,7 +13,8 @@ export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService ,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly eventEmitter: EventEmitter2
     ) {}
 
     async signUp(authDto: AuthDto): Promise<Tokens> {
@@ -26,6 +28,8 @@ export class AuthService {
         
         await this.userService.updateHashedRefreshToken(user.id, tokens.refresh_token);
 
+        await this.eventEmitter.emitAsync('user-signed-up', user.email, user.emailConfirmationToken.token);
+       
         return tokens
     }
 

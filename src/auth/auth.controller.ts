@@ -15,7 +15,7 @@ export class AuthController {
     @ApiConflictResponse({ description: 'User with provided email already exists.' })
     @Public()
     @Post('signup')
-    signUp(@Body() authDto: AuthDto): Promise<Tokens> {
+    async signUp(@Body() authDto: AuthDto): Promise<Tokens> {
         return this.authService.signUp(authDto);
     }
     
@@ -25,7 +25,7 @@ export class AuthController {
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('signin')
-    signIn(@Body() authDto: AuthDto): Promise<Tokens> {
+    async signIn(@Body() authDto: AuthDto): Promise<Tokens> {
         return this.authService.signIn(authDto);
     }
 
@@ -34,8 +34,8 @@ export class AuthController {
     @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
     @Post('logout')
-    logOut(@GetCurrentUserId() userId: number) {
-        this.authService.logOut(userId);
+    async logOut(@GetCurrentUserId() userId: number) {
+        await this.authService.logOut(userId);
     }
 
     @ApiOkResponse({ description: 'Tokens have been successfully refreshed.' })
@@ -45,8 +45,8 @@ export class AuthController {
     @UseGuards(RefreshTokenGuard)
     @HttpCode(HttpStatus.OK)
     @Post('refresh')
-    refresh(@GetCurrentUserId() userId: number, 
-            @GetCurrentUserRefreshToken() refreshToken: string): Promise<Tokens> {
+    async refresh(@GetCurrentUserId() userId: number, 
+                  @GetCurrentUserRefreshToken() refreshToken: string): Promise<Tokens> {
         return this.authService.refreshTokens(userId, refreshToken);
     }
 }

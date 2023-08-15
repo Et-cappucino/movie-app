@@ -1,12 +1,15 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/entities/profile.entity';
 import { PaginationService } from 'src/utils/pagination/pagaination.service';
+import { EmailConfirmationToken } from 'src/email-confirmation-token/entities/email-confirmation-token.entity';
 
 @Injectable()
 export class UserService {
@@ -14,7 +17,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly profileService: ProfileService,
-    private readonly pagainationService: PaginationService
+    private readonly pagainationService: PaginationService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
   
   async create(createUserDto: CreateUserDto) {
@@ -25,6 +29,13 @@ export class UserService {
     
     const user = this.userRepository.create(createUserDto)
     user.profile = profile
+
+    const result = await this.eventEmitter.emitAsync('user-created');
+    const token = result[0];
+    
+    if (token instanceof EmailConfirmationToken) {
+      user.emailConfirmationToken = token;
+    }
     
     return this.userRepository.save(user);
   }
@@ -32,7 +43,8 @@ export class UserService {
   async findAll(pageNumber: number, pageSize: number) {
     const [users, count] = await this.userRepository.findAndCount({
       relations: {
-        profile: true
+        profile: true,
+        emailConfirmationToken: true
       },
       skip: pageNumber * pageSize,
       take: pageSize
@@ -45,7 +57,8 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: {
-        profile: true
+        profile: true,
+        emailConfirmationToken: true
       }
     });
     
@@ -87,6 +100,29 @@ export class UserService {
       ...user,
       hashedRefreshToken: token ? await this.encrypt(token) : null
     })
+  }
+
+  @OnEvent('email-confirmed')
+  async enableUser(id: number) {
+    const user = await this.findOne(id);
+    
+    await this.userRepository.save({
+      ...user,
+      isEnabled: true
+    })
+  }
+
+  @Cron(CronExpression.EVERY_5_HOURS)
+  async cleanupNotEnabledUsers() {
+    const notEnabledUsers = await this.userRepository.find({
+      where: {
+        isEnabled: false
+      }
+    })
+    
+    if (notEnabledUsers.length !== 0) {
+      await this.userRepository.remove(notEnabledUsers);
+    }
   }
 
   private async validateEmailUnique(email: string, id?: number) {

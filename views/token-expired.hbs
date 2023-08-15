@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmation Failed</title>
+  <link rel="icon" href="https://i.imgur.com/y7HL7U1.png" type="image/png">
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    .container {
+        position: relative;
+        width: 100%;
+        height: 120vh;
+    }
+
+    .container::before {
+        position: absolute;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-image: url(https://i.ibb.co/Jq8qT8J/bg6.jpg);
+        background-position: bottom;
+        background-repeat: no-repeat;
+        background-size: cover;
+        filter: brightness(35%);
+        z-index: -1;
+    }
+
+    .container h1 {
+        position: relative;
+        top: 40%;
+        text-align: center;
+        color: #ffffff;
+        font-size: 80px;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        filter: drop-shadow(0 0 0.2rem #ffffff5c);
+    }
+
+    .container h3 {
+        position: relative;
+        top: 47%;
+        text-align: center;
+        color: #ffffff;
+        font-size: 35px;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        filter: drop-shadow(0 0 0.2rem #ffffff5c);
+    }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1> Confirmation time has already expired </h1>
+  <h3> Try signing up again </h3>
+</div>
+</body>
+
+</html>
